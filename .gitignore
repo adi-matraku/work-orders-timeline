@@ -5,11 +5,16 @@
 /tmp
 /out-tsc
 /bazel-out
+build.js
+*.js.map
 
 # Node
+node_modules/
 /node_modules
 npm-debug.log
 yarn-error.log
+.npm
+.yarn-integrity
 
 # IDEs and editors
 .idea/
@@ -29,6 +34,7 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
+.angular/
 /.angular/cache
 .sass-cache/
 /connect.lock
@@ -40,3 +46,5 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+*.ini
+desktop.ini

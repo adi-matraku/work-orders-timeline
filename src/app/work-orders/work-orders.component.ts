@@ -1,26 +1,41 @@
 import { Component } from '@angular/core';
+import { WorkCenterActivityComponent } from '../work-center-activity/work-center-activity.component';
+import { TimescaleSelectorComponent } from '../work-center-activity/timescale-selector/timescale-selector.component';
 
 @Component({
   selector: 'app-work-orders',
   standalone: true,
+  imports: [WorkCenterActivityComponent, TimescaleSelectorComponent],
   template: `
     <div class="work-orders-container">
-      <p>work centers</p>
+      <h1 class="title">Work Orders</h1>
+      <div class="timescale-selector-container">
+        <app-timescale-selector />
+      </div>
+      <div class="work-center-activity-container">
+        <app-work-center-activity />
+      </div>
     </div>
   `,
   styles: `
-    :host {
-      display: block;
-      width: 100%;
-      min-height: 100vh;
-    }
     .work-orders-container {
-      width: 1440px;
-      height: 1024px;
-      background-color: rgba(255, 255, 255, 1);
+      width: 100%;
+      height: 100%;
+    };
+    .title {
+      width: 142px;
+      height: 34px;
+      margin-bottom: 26px;
+      color: rgba(3, 9, 41, 1);
+      font-family: "Circular-Std", sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 34px;
+      letter-spacing: auto;
+      text-align: left;
+      vertical-align: top;
       box-sizing: border-box;
-      padding: 95px 0 0 101px;
     }
   `,
 })
-export class WorkOrdersComponent {}
+export class WorkOrdersComponent { }
