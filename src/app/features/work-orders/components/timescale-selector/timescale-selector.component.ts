@@ -19,7 +19,7 @@ import {NgSelectModule} from '@ng-select/ng-select';
         [searchable]="false"
         [clearable]="false"
         [appendTo]="'body'"
-        class="custom"
+        class="custom-timescale-select"
       >
       </ng-select>
     </div>
