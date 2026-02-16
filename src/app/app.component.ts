@@ -8,7 +8,7 @@ import { RouterOutlet } from '@angular/router';
   template: `
     <div class="app-container">
       <div class="logo-container">
-        <img src="images/Naologic-logo.png" alt="Naologic logo" />
+        <img src="src/assets/Naologic-logo.png" alt="Naologic logo" />
       </div>
       <router-outlet/>
     </div>
