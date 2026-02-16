@@ -16,9 +16,7 @@ import { RouterOutlet } from '@angular/router';
   styles: `
     .app-container {
       width: 1440px;
-      margin-left: 101px;
-      min-height: 100vh;
-      box-sizing: border-box;
+      padding-left: 101px;
     }
     .logo-container {
       width: 100%;

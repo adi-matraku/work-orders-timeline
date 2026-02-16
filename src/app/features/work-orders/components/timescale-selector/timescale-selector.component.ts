@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, input, output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {NgSelectModule} from '@ng-select/ng-select';
+import {Timescale} from '../../models/timescale.model';
 
 @Component({
   selector: 'app-timescale-selector',
@@ -15,7 +16,8 @@ import {NgSelectModule} from '@ng-select/ng-select';
         [items]="timescales"
         bindLabel="label"
         bindValue="value"
-        [(ngModel)]="selected"
+        [ngModel]="value()"
+        (ngModelChange)="viewChange.emit($event)"
         [searchable]="false"
         [clearable]="false"
         [appendTo]="'body'"
@@ -62,12 +64,13 @@ import {NgSelectModule} from '@ng-select/ng-select';
   `,
 })
 export class TimescaleSelectorComponent {
-  timescales: { label: string; value: string }[] = [
+  readonly value = input<Timescale>('month');
+  readonly viewChange = output<Timescale>();
+
+  readonly timescales: { label: string; value: string }[] = [
     {label: 'Hour', value: 'hour'},
     {label: 'Day', value: 'day'},
     {label: 'Week', value: 'week'},
     {label: 'Month', value: 'month'}
   ];
-
-  selected = 'month';
 }
