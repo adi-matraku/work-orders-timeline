@@ -40,8 +40,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Aluminum Profiles Batch #42',
       workCenterId: 'wc-1',
       status: 'in-progress',
-      startDate: '2025-01-10',
-      endDate: '2025-01-18'
+      startDate: '2025-08-01',
+      endDate: '2025-10-30'
     }
   },
   {
@@ -51,8 +51,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'PVC Tubing Run',
       workCenterId: 'wc-1',
       status: 'open',
-      startDate: '2025-01-20',
-      endDate: '2025-01-26'
+      startDate: '2025-11-02',
+      endDate: '2026-01-25'
     }
   },
   {
@@ -62,8 +62,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'CNC Milling – Housing',
       workCenterId: 'wc-2',
       status: 'complete',
-      startDate: '2025-01-05',
-      endDate: '2025-01-09'
+      startDate: '2025-09-05',
+      endDate: '2026-01-09'
     }
   },
   {
@@ -73,8 +73,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Precision Drilling',
       workCenterId: 'wc-2',
       status: 'blocked',
-      startDate: '2025-01-15',
-      endDate: '2025-01-22'
+      startDate: '2026-01-15',
+      endDate: '2026-04-22'
     }
   },
   {
@@ -84,8 +84,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Final Assembly – Model X',
       workCenterId: 'wc-3',
       status: 'in-progress',
-      startDate: '2025-01-12',
-      endDate: '2025-01-28'
+      startDate: '2025-10-12',
+      endDate: '2026-02-28'
     }
   },
   {
@@ -95,8 +95,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Electrical QA Batch',
       workCenterId: 'wc-4',
       status: 'open',
-      startDate: '2025-01-18',
-      endDate: '2025-01-21'
+      startDate: '2026-01-18',
+      endDate: '2026-04-21'
     }
   },
   {
@@ -106,8 +106,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Packaging – Export Pallets',
       workCenterId: 'wc-5',
       status: 'in-progress',
-      startDate: '2025-01-08',
-      endDate: '2025-01-14'
+      startDate: '2026-02-08',
+      endDate: '2026-05-14'
     }
   },
   {
@@ -117,8 +117,8 @@ export const MOCK_WORK_ORDERS: WorkOrderDocument[] = [
       name: 'Re-Packaging – Damaged Goods',
       workCenterId: 'wc-5',
       status: 'complete',
-      startDate: '2025-01-16',
-      endDate: '2025-01-19'
+      startDate: '2025-09-16',
+      endDate: '2025-12-19'
     }
   }
 ];

@@ -21,7 +21,7 @@ import {Timescale} from '../../models/timescale.model';
         [searchable]="false"
         [clearable]="false"
         [appendTo]="'body'"
-        class="custom-timescale-select"
+        class="custom-timescale-select custom-dropdown-panel"
       >
       </ng-select>
     </div>

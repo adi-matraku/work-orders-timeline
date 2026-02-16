@@ -2,9 +2,18 @@ import {TimelineColumn, Timescale, TIMESCALE_CONFIG} from '../models/timescale.m
 import {getStartOfWeek, getWeekNumber} from './date-utils';
 
 export function getDurationPerCell(view: Timescale): number {
-  if (view === 'day') return 24 * 60 * 60 * 1000;
-  if (view === 'week') return 7 * 24 * 60 * 60 * 1000;
-  return 30 * 24 * 60 * 60 * 1000; // Approx month
+  switch (view) {
+    case 'hour':
+      return 60 * 60 * 1000;
+    case 'day':
+      return 24 * 60 * 60 * 1000;
+    case 'week':
+      return 7 * 24 * 60 * 60 * 1000;
+    case 'month':
+      return 30.44 * 24 * 60 * 60 * 1000;
+    default:
+      return 24 * 60 * 60 * 1000;
+  }
 }
 
 export function buildDayColumns(): TimelineColumn[] {

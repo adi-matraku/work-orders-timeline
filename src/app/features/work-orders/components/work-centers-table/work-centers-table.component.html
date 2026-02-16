@@ -1,0 +1,120 @@
+<div class="work-centers">
+  <div class="timescale-selector-container">
+    <app-timescale-selector (viewChange)="setView($event)"/>
+  </div>
+  <div class="work-centers-container">
+    <div class="work-centers-layout">
+      <!-- LEFT PANEL: Work Centers -->
+      <div class="left-panel">
+        <div class="panel-header">
+          <span class="header-label">Work Center</span>
+        </div>
+
+        <div class="panel-rows">
+          @for (center of workCenters(); track center) {
+            <div class="center-row">
+              <span class="center-label">{{ center.data.name }}</span>
+            </div>
+          }
+          <div class="filler-space"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT PANEL: Timeline -->
+      <div class="right-panel" #scrollContainer>
+        <div class="timeline-content-wrapper">
+          <div class="timeline-header">
+            @for (col of timelineColumns(); track col.label) {
+              <div class="timeline-col-header" [style.width.px]="cellWidth()">
+                <div class="header-label-wrapper">
+                  @if (col.subLabel) {
+                    <span class="sub-label">{{ col.subLabel }}</span>
+                  }
+                  <span class="main-label">{{ col.label }}</span>
+                </div>
+              </div>
+            }
+          </div>
+
+          <div class="timeline-grid">
+            @for (center of workCenters(); track center) {
+              <div class="grid-row"
+                   (mousemove)="onGridRowHover($event, center.docId)"
+                   (mouseleave)="hoverPreview.set(null)"
+              >
+                @for (col of timelineColumns(); track col.label) {
+                  <div class="grid-cell" [style.width.px]="cellWidth()"></div>
+                }
+
+                <!-- work orders for this work center -->
+                @for (order of timelineOrders(); track order.docId) {
+                  @if (order.data.workCenterId === center.docId) {
+                    <div
+                      class="work-order"
+                      [class]="order.data.status"
+                      [style.left.px]="order.left"
+                      [style.width.px]="order.width"
+                    >
+                      <div class="work-order-content">
+                        <p class="work-order-name">
+                          {{ order.data.name }}
+                        </p>
+
+
+                        <div class="work-order-right">
+                          <span class="work-order-status">{{ order.data.status | titlecase }}</span>
+
+                          <div class="work-order-actions">
+                            <ng-select
+                              class="kebab-select custom-dropdown-panel"
+                              [items]="workOrderActions"
+                              bindLabel="label"
+                              bindValue="value"
+                              [clearable]="false"
+                              [searchable]="false"
+                              [appendTo]="'body'"
+                              [markFirst]="false"
+                              (change)="onWorkOrderAction($event, order)"
+                            >
+                            </ng-select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                }
+
+                @if (hoverPreview()?.workCenterId === center.docId) {
+                  <div
+                    class="add-work-order-preview"
+                    [style.left.px]="hoverPreview()!.left"
+                    [style.width.px]="hoverPreview()!.width"
+                    (click)="onPreviewClick($event, center.docId)"
+                  >
+                    <span class="preview-label">Click to add dates</span>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Current Date Vertical Line (Exact Today) -->
+            <div class="today-line" [style.left.px]="todayOffset()"></div>
+
+            <!-- Current Month Tag (Centered in the month cell) -->
+            @if (currentView() === 'month') {
+              <div class="current-month-indicator" [style.left.px]="monthCenterOffset()">
+                <div class="indicator-tag">Current month</div>
+              </div>
+            }
+
+            <div class="grid-filler">
+              @for (col of timelineColumns(); track col.label) {
+                <div class="grid-cell" [style.width.px]="cellWidth()"></div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

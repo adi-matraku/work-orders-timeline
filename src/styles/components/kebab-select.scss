@@ -1,0 +1,78 @@
+/* =========================================================
+   ng-select – kebab (three-dot) action menu
+   ========================================================= */
+.ng-select.kebab-select {
+  width: 24px;
+  height: 22px;
+}
+
+.ng-select.kebab-select .ng-select-container {
+  width: 24px;
+  height: 22px;
+  min-height: 22px;
+
+  padding: 0;
+  margin: 0;
+
+  border: none;
+  outline: none;
+  box-shadow: none;
+
+  background-color: rgba(241, 243, 248, 1);
+  border-radius: 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+}
+
+/* Preserve border radius when dropdown is opened */
+.ng-select.kebab-select.ng-select-opened .ng-select-container {
+  border-radius: 5px;
+}
+
+.ng-select.kebab-select .ng-select-container .ng-value-container {
+  display: none;
+}
+.ng-select.kebab-select.ng-select-single .ng-select-container .ng-value-container .ng-input {
+  top: 0;
+}
+
+/* Use arrow wrapper as icon */
+.ng-select.kebab-select .ng-arrow-wrapper {
+  width: 12px;
+  height: 5.25px;
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: url('/assets/three-dots.png') no-repeat center;
+  background-size: contain;
+}
+
+/* Kill default arrow completely */
+.ng-select.kebab-select .ng-arrow {
+  display: none;
+}
+
+.ng-select.kebab-select .ng-arrow-wrapper .ng-arrow {
+  border: none;
+}
+
+/* Kill ALL focus / open / hover visuals */
+.ng-select.kebab-select.ng-select-focused .ng-select-container,
+.ng-select.kebab-select.ng-select-opened .ng-select-container,
+.ng-select.kebab-select:hover .ng-select-container {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.ng-dropdown-panel.kebab-select {
+  width: 200px !important;
+}

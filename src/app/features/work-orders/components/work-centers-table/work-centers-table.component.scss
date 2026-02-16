@@ -1,0 +1,346 @@
+:host {
+  display: block;
+}
+
+.work-centers-container {
+  border: 1px solid rgba(230, 235, 240, 1);
+  margin-top: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); // will remove later
+}
+
+.work-centers-layout {
+  display: flex;
+  overflow: hidden;
+  align-items: stretch;
+
+  .left-panel {
+    width: 382px;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(230, 235, 240, 1);
+    background: white;
+    z-index: 10;
+
+    .panel-header {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      padding: 9px 0 9px 31px;
+      background-color: rgba(255, 255, 255, 1);
+      border-bottom: 1px solid rgba(230, 235, 240, 1);
+      box-sizing: border-box;
+
+      .header-label {
+        color: rgba(104, 113, 150, 1);
+        font-size: 14px;
+        font-weight: 500;
+        height: 16px;
+        letter-spacing: normal;
+      }
+    }
+
+    .center-row {
+      height: 48px;
+      background-color: rgba(255, 255, 255, 1);
+      display: flex;
+      align-items: center;
+      padding: 16px 0 16px 31px;
+      border-bottom: 1px solid rgba(230, 235, 240, 1);
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba(250, 251, 253, 1);
+      }
+
+      .center-label {
+        width: 98px;
+        height: 16px;
+        color: rgba(3, 9, 41, 1);
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 17px;
+        white-space: nowrap;
+      }
+    }
+
+    .filler-space {
+      min-height: 400px;
+      background: white;
+    }
+  }
+
+  .right-panel {
+    width: 957px;
+    overflow-x: auto;
+    position: relative;
+    background: white;
+    scroll-behavior: smooth;
+
+    .timeline-content-wrapper {
+      min-width: max-content;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .timeline-header {
+      display: flex;
+      height: 36px;
+      border-bottom: 1px solid rgba(230, 235, 240, 1);
+      box-sizing: border-box;
+
+      .timeline-col-header {
+        flex-shrink: 0;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: rgba(104, 113, 150, 1);
+        border-right: 1px solid rgba(230, 235, 240, 1);
+        box-sizing: border-box;
+        background: white;
+
+        .header-label-wrapper {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          line-height: 1.2;
+
+          .sub-label {
+            font-size: 10px;
+            color: rgba(140, 150, 180, 1);
+            font-weight: 500;
+            margin-bottom: 2px;
+          }
+
+          .main-label {
+            color: rgba(104, 113, 150, 1);
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    .timeline-grid {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+
+      .grid-cell {
+        flex-shrink: 0;
+        height: 100%;
+        border-right: 1px solid rgba(230, 235, 240, 1);
+        box-sizing: border-box;
+      }
+
+      .grid-row {
+        position: relative;
+        height: 48px;
+        display: flex;
+        border-bottom: 1px solid rgba(230, 235, 240, 1);
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(238, 240, 255, 0.6);
+        }
+
+        .add-work-order-preview {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+
+          width: 113px;
+          height: 38px;
+
+          border: 1px solid rgba(195, 199, 255, 1);
+          border-radius: 8px;
+
+          background-color: rgba(101, 112, 255, 0.1);
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          cursor: pointer;
+          z-index: 3;
+
+          .preview-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(62, 64, 219, 1);
+            white-space: nowrap;
+            pointer-events: none;
+          }
+        }
+
+        .work-order {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 38px;
+          border-radius: 8px;
+          cursor: pointer;
+          z-index: 2;
+
+          &:hover {
+            .work-order-actions {
+              opacity: 1;
+              pointer-events: auto;
+            }
+          }
+
+          .work-order-content {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 10px 8px;
+          }
+
+          .work-order-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+          }
+
+          .work-order-name {
+            height: 18px;
+
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(3, 9, 41, 1);
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          .work-order-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            height: 22px;
+            border-radius: 5px;
+
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(3, 9, 41, 1);
+
+            white-space: nowrap;
+          }
+
+          .work-order-actions {
+            display: flex;
+            align-items: center;
+
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 120ms ease;
+          }
+
+          /* Keep kebab visible while dropdown is open */
+          .work-order-actions:has(.ng-select-opened) {
+            opacity: 1;
+            pointer-events: auto;
+          }
+
+          .more-icon {
+            font-size: 18px;
+            line-height: 1;
+            color: rgba(104, 113, 150, 1);
+            cursor: pointer;
+          }
+
+
+          &.open {
+            background-color: #9aa5ff; // was not given in sketch design
+
+            .work-order-status {
+              width: 87px;
+              color: #1f2a7a;
+              background-color: rgba(214, 216, 255, 1);
+            }
+          }
+
+          &.in-progress {
+            box-shadow: 0 0 0 1px rgba(222, 224, 255, 1);
+            background-color: rgba(237, 238, 255, 1);
+
+            .work-order-status {
+              width: 87px;
+              color: rgba(62, 64, 219, 1);
+              background-color: rgba(214, 216, 255, 1);
+            }
+          }
+
+          &.complete {
+            box-shadow: 0 0 0 1px rgba(209, 250, 179, 1);
+            background-color: rgba(248, 255, 243, 1);
+
+            .work-order-status {
+              width: 79px;
+              color: rgba(8, 162, 104, 1);
+              background-color: rgba(225, 255, 204, 1);
+            }
+          }
+
+          &.blocked {
+            box-shadow: 0 0 0 1px rgba(255, 245, 207, 1);
+            background-color: rgba(255, 252, 241, 1);
+
+            .work-order-status {
+              width: 67px;
+              color: rgba(177, 54, 0, 1);
+              background-color: rgba(252, 238, 181, 1);
+            }
+          }
+        }
+
+      }
+
+      .grid-filler {
+        min-height: 400px;
+        background: transparent;
+      }
+
+      .today-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 0;
+        border-left: 3px solid rgba(212, 215, 255, 1);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .current-month-indicator {
+        position: absolute;
+        top: 0;
+        pointer-events: none;
+        z-index: 5;
+        border-radius: 5px;
+
+        width: 109px;
+        height: 22px;
+        background-color: rgba(212, 215, 255, 1);
+
+        transform: translateX(-50%);
+
+        .indicator-tag {
+          width: 93px;
+          height: 18px;
+          font-weight: 500; // put 500 instead of 400 that was on sketch since font looks better
+
+          color: rgba(62, 64, 219, 1);
+          font-size: 14px;
+
+          padding: 2px 8px;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+};
