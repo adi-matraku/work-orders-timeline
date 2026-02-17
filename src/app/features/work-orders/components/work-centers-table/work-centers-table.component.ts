@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef, input, model, output,
+  ElementRef, inject, input, model, output,
   signal,
   viewChild
 } from '@angular/core';
@@ -17,11 +17,11 @@ import {
   buildWeekColumns,
   getDurationPerCell
 } from '../../utils/timeline-columns.utils';
-import {MOCK_WORK_CENTERS, MOCK_WORK_ORDERS} from '../../../../mocks/work-orders.mock';
+import {MOCK_WORK_CENTERS} from '../../../../mocks/work-orders.mock';
 import {
-  WorkCenterDocument, WorkOrderForm,
-  WorkOrderActionType,
-  WorkOrderDocument
+  WorkCenterDocument,
+  WorkOrderActionType, WorkOrderData,
+  WorkOrderDocument, WorkOrderPanelInput, WorkOrderSaveEvent
 } from '../../models/work-orders.model';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {FormsModule} from '@angular/forms';
@@ -49,11 +49,11 @@ export class WorkCentersTableComponent implements AfterViewInit {
   readonly workCenters = signal<WorkCenterDocument[]>(MOCK_WORK_CENTERS);
   workOrders = input.required<WorkOrderDocument[]>();
 
-  onCreate = output<WorkOrderDocument['data']>();
+  onCreate = output<WorkOrderData>();
 
   onUpdate = output<{
     docId: string;
-    data: WorkOrderDocument['data']
+    data: WorkOrderDocument
   }>();
 
   onDelete = output<string>();
@@ -102,32 +102,44 @@ export class WorkCentersTableComponent implements AfterViewInit {
   timelineOrders = computed<PositionedWorkOrder[]>(() => {
     const orders = this.workOrders();
     const columns = this.timelineColumns();
-    if (columns.length === 0) return [];
+    if (!columns.length) return [];
 
     const cellWidth = this.cellWidth();
-    const timelineStartMs = columns[0].date.getTime();
-
-    // Duration of a single cell in MS based on view
     const msPerCell = getDurationPerCell(this.currentView());
 
+    const timelineStartMs = columns[0].date.getTime();
+    const timelineEndMs =
+      columns[columns.length - 1].date.getTime() + msPerCell;
+
     return orders.map(order => {
-      const startMs = new Date(order.data.startDate).getTime();
-      const endMs = new Date(order.data.endDate).getTime();
+      const orderStartMs = new Date(order.data.startDate).getTime();
+      const orderEndMs = new Date(order.data.endDate).getTime();
 
-      // Calculate how many MS from the start of the timeline
-      const elapsedMs = startMs - timelineStartMs;
+      // Clamp order to visible range
+      const visibleStartMs = Math.max(orderStartMs, timelineStartMs);
+      const visibleEndMs = Math.min(orderEndMs, timelineEndMs);
 
-      // Convert MS to pixels: (Elapsed MS / MS per Cell) * Cell Width
-      const left = (elapsedMs / msPerCell) * cellWidth;
+      // If no intersection, don't render
+      if (visibleEndMs <= visibleStartMs) {
+        return {
+          ...order,
+          left: 0,
+          width: 0,
+          hidden: true,
+        };
+      }
 
-      // Calculate width: (Duration MS / MS per Cell) * Cell Width
-      const durationMs = endMs - startMs;
-      const width = (durationMs / msPerCell) * cellWidth;
+      // Convert visible range to pixels
+      const left =
+        ((visibleStartMs - timelineStartMs) / msPerCell) * cellWidth;
+
+      const width =
+        ((visibleEndMs - visibleStartMs) / msPerCell) * cellWidth;
 
       return {
         ...order,
         left,
-        width: Math.max(width, 40)
+        width: Math.max(width, 40), // min visual width
       };
     });
   });
@@ -201,28 +213,34 @@ export class WorkCentersTableComponent implements AfterViewInit {
   }
 
   panelOpen = signal(false);
-  panelData = signal<any | null>(null);
+  panelData = signal<WorkOrderPanelInput | null>(null);
 
   onPanelClose(): void {
     this.closeAndResetModal();
+    this.selectedAction.set(null);
   }
 
-  onPanelSave(workOrder: WorkOrderForm): void {
+  onPanelSave(workOrder: WorkOrderSaveEvent): void {
     console.log('Saved work order:', workOrder);
     this.panelOpen.set(false);
     this.panelData.set(null);
+
+    if (workOrder.mode === 'create') {
+      this.onCreate.emit(workOrder.data);
+    } else {
+      // this.store.updateOrder(workOrder.data);
+    }
   }
 
   onWorkOrderAction(
     action: WorkOrderActionType,
-    order: WorkOrderDocument
+    order: PositionedWorkOrder
   ): void {
     switch (action) {
       case 'edit':
-        console.log('Edit', order);
-        const { workCenterId, ...workOrderData } = order.data;
-        this.panelData.set(workOrderData);
-        this.panelOpen.set(true);
+        console.log(order);
+        console.log('Edit', order.data);
+        this.openPanel({mode: 'edit', data: order});
         break;
 
       case 'delete':
@@ -314,8 +332,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
     console.log('Successfully captured dates:', newWorkOrder);
 
     // 4. NEXT STEP: Open creation dialog
-    this.panelOpen.set(true);
-    this.panelData.set(newWorkOrder);
+    this.openPanel({mode: 'create', data: newWorkOrder});
 
     // 5. Clear the preview after clicking so it doesn't stay stuck
     this.hoverPreview.set(null);
@@ -342,9 +359,24 @@ export class WorkCentersTableComponent implements AfterViewInit {
     return {startDate, endDate};
   }
 
+  /**
+   * Opens the work order panel with the provided data.
+   * This method is used for both creating new work orders (with pre-filled dates) and editing existing ones.
+   * @param data
+   * @private
+   */
+  private openPanel(data: WorkOrderPanelInput) {
+    this.panelOpen.set(true);
+    this.panelData.set(data);
+  }
+
+  /**
+   * Closes the work order panel.
+   * This is called after saving or when the user cancels the action.
+   * @private
+   */
   private closeAndResetModal(): void {
     this.panelOpen.set(false);
     this.panelData.set(null);
-    this.selectedAction.set(null);
   }
 }

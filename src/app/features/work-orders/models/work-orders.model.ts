@@ -23,9 +23,15 @@ export interface WorkOrderData {
   endDate: string;
 }
 
-export interface WorkOrderForm {
-  name: string;
-  status: WorkOrderStatus;
+export interface WorkOrderCreateTemplate {
+  workCenterId: string;
   startDate: string;
   endDate: string;
 }
+
+export type WorkOrderPanelInput = { mode: 'create'; data: WorkOrderCreateTemplate; }
+  | { mode: 'edit'; data: WorkOrderDocument; };
+
+export type WorkOrderSaveEvent =
+  | { mode: 'create'; data: WorkOrderData }
+  | { mode: 'edit'; data: WorkOrderDocument };

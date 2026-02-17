@@ -15,7 +15,7 @@ import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.compon
         <div class="work-orders-container">
             <h1 class="title">Work Orders</h1>
             <div class="work-center-activity-container">
-                <app-work-centers-table [workOrders]="store.items()"/>
+                <app-work-centers-table [workOrders]="store.items()" (onCreate)="store.addOrder($event)"/>
             </div>
         </div>
     `,
@@ -23,7 +23,9 @@ import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.compon
       .work-orders-container {
         width: 100%;
         height: 100%;
-      };
+      }
+
+      ;
 
       .title {
         width: 142px;

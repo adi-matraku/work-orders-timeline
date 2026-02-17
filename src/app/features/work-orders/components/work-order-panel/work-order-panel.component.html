@@ -17,7 +17,7 @@
           <span class="btn-cancel-text">Cancel</span>
         </button>
 
-        <button type="submit" class="btn-create" [disabled]="workOrderForm.invalid">
+        <button type="submit" class="btn-create">
           <span class="btn-create-text">
             {{ data() ? 'Save' : 'Create' }}
           </span>
@@ -53,7 +53,7 @@
           [appendTo]="'body'"
           [clearable]="false"
           [searchable]="false"
-          >
+        >
 
           <ng-template ng-label-tmp let-item="item">
             <span class="status-badge" [attr.data-status]="item.value">

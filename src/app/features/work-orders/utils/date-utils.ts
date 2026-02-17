@@ -20,7 +20,7 @@ export function isoToNgbDate(iso?: string): NgbDateStruct | null {
   return { year: y, month: m, day: d };
 }
 
-function ngbDateToIso(date: NgbDateStruct | null): string | null {
+export function ngbDateToIso(date: NgbDateStruct | null): string | null {
   if (!date) return null;
 
   const { year, month, day } = date;

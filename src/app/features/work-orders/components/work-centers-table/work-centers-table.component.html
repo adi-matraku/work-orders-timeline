@@ -48,7 +48,7 @@
 
                 <!-- work orders for this work center -->
                 @for (order of timelineOrders(); track order.docId) {
-                  @if (order.data.workCenterId === center.docId) {
+                  @if (order.data.workCenterId === center.docId && !order.hidden) {
                     <div
                       class="work-order"
                       [class]="order.data.status"

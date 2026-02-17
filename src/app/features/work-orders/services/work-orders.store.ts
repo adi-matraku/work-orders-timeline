@@ -1,9 +1,10 @@
-import { inject } from '@angular/core';
-import { signalStore, withState, withMethods, patchState, getState } from '@ngrx/signals';
-import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap, catchError, of } from 'rxjs';
+import {inject} from '@angular/core';
+import {getState, patchState, signalStore, withMethods, withState} from '@ngrx/signals';
+import {rxMethod} from '@ngrx/signals/rxjs-interop';
+import {catchError, of, pipe, switchMap, tap} from 'rxjs';
 import {WorkOrderData, WorkOrderDocument} from '../models/work-orders.model';
 import {WorkOrderService} from './work-orders.service';
+import {ToastService} from '../../../shared/services/toast.service';
 
 export interface WorkOrderState {
   items: WorkOrderDocument[];
@@ -18,15 +19,15 @@ const initialState: WorkOrderState = {
 };
 
 export const WorkOrderStore = signalStore(
-  { providedIn: 'root' },
+  {providedIn: 'root'},
   withState(initialState),
-  withMethods((store, service = inject(WorkOrderService)) => {
+  withMethods((store, service = inject(WorkOrderService), toast = inject(ToastService)) => {
 
     /**
      * Internal helper to check for date overlaps within the same Work Center.
      */
     const hasOverlap = (newData: WorkOrderData, excludeDocId?: string): boolean => {
-      const { items } = getState(store); // Using getState helper
+      const {items} = getState(store); // Using getState helper
       return items.some(item => {
         if (item.docId === excludeDocId) return false;
         if (item.data.workCenterId !== newData.workCenterId) return false;
@@ -40,19 +41,27 @@ export const WorkOrderStore = signalStore(
       });
     };
 
+    /**
+     * Handle errors by updating state and showing a toast notification.
+     */
+    const handleError = (msg: string) => {
+      patchState(store, {error: msg, isLoading: false});
+      toast.show(msg, 'error');
+      return of(null);
+    };
+
     return {
       /**
        * Initial load of work orders.
        */
       loadOrders: rxMethod<void>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
+          tap(() => patchState(store, {isLoading: true})),
           switchMap(() => service.getOrders().pipe(
-            tap(items => patchState(store, { items, isLoading: false })),
-            catchError(() => {
-              patchState(store, { error: 'Failed to load schedule', isLoading: false });
-              return of([]);
-            })
+            tap(items => patchState(store, {items, isLoading: false})),
+            catchError(() =>
+              handleError('Failed to load schedule')
+            )
           ))
         )
       ),
@@ -62,11 +71,11 @@ export const WorkOrderStore = signalStore(
        */
       addOrder: rxMethod<WorkOrderData>(
         pipe(
-          tap(() => patchState(store, { isLoading: true, error: null })),
+          tap(() => patchState(store, {isLoading: true, error: null})),
           switchMap((orderData) => {
+            console.log(orderData);
             if (hasOverlap(orderData)) {
-              patchState(store, { error: 'Overlap detected! Choose another time.', isLoading: false });
-              return of(null);
+              return handleError('Overlap detected! Choose another time.');
             }
 
             return service.createOrder(orderData).pipe(
@@ -77,18 +86,15 @@ export const WorkOrderStore = signalStore(
                   isLoading: false
                 });
               }),
-              catchError(() => {
-                patchState(store, { error: 'Save failed', isLoading: false });
-                return of(null);
-              })
+              catchError(() => handleError('Save failed'))
             );
           })
         )
       ),
 
-      // /**
-      //  * Updates an existing Work Order.
-      //  */
+      /**
+       * Updates an existing Work Order.
+       */
       // updateOrder: rxMethod<{ docId: string; data: WorkOrderData }>(
       //   pipe(
       //     tap(() => patchState(store, { isLoading: true, error: null })),
@@ -120,23 +126,20 @@ export const WorkOrderStore = signalStore(
        */
       removeOrder: rxMethod<string>(
         pipe(
-          tap(() => patchState(store, { isLoading: true })),
+          tap(() => patchState(store, {isLoading: true})),
           switchMap(docId => service.deleteOrder(docId).pipe(
             tap(() => {
-              const { items } = getState(store);
+              const {items} = getState(store);
               patchState(store, {
                 items: items.filter(i => i.docId !== docId),
                 isLoading: false
               });
             }),
-            catchError(() => {
-              patchState(store, { error: 'Delete failed', isLoading: false });
-              return of(null);
-            })
+            catchError(() => handleError('Delete failed'))
           ))
         )
       ),
-      clearError: () => patchState(store, { error: null })
+      clearError: () => patchState(store, {error: null})
     };
   })
 );

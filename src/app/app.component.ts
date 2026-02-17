@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import {ToastComponent} from './shared/toast.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ToastComponent],
   template: `
     <div class="app-container">
       <div class="logo-container">
         <img src="/assets/Naologic-logo.png" alt="Naologic logo" />
       </div>
       <router-outlet/>
+      <app-toast />
     </div>
   `,
   styles: `

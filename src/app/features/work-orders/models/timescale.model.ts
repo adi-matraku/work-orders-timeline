@@ -5,6 +5,7 @@ export type Timescale = 'hour' | 'day' | 'week' | 'month';
 export interface PositionedWorkOrder extends WorkOrderDocument {
   left: number;
   width: number;
+  hidden?: boolean;
 }
 
 export interface TimelineColumn {

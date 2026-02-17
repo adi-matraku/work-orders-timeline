@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {delay, Observable, of} from 'rxjs';
 import {WorkOrderData, WorkOrderDocument} from '../models/work-orders.model';
 import {MOCK_WORK_ORDERS} from '../../../mocks/work-orders.mock';
+import {generateId} from '../utils/numbers-generator.util';
 
 @Injectable({providedIn: 'root'})
 export class WorkOrderService {
@@ -15,11 +16,10 @@ export class WorkOrderService {
   // Simulate a create call
   createOrder(orderData: WorkOrderData): Observable<WorkOrderDocument> {
     const newDoc: WorkOrderDocument = {
-      docId: Math.random().toString(36).substring(7),
+      docId: generateId(),
       docType: 'workOrder',
       data: orderData
     };
-    this.mockDb.push(newDoc);
     return of(newDoc).pipe(delay(1000));
   }
 
