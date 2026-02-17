@@ -1,15 +1,21 @@
-import {Component} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {WorkCentersTableComponent} from '../../components/work-centers-table/work-centers-table.component';
+import {WorkOrderStore} from "../../services/work-orders.store";
+import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.component";
 
 @Component({
     selector: 'app-work-orders',
     standalone: true,
-    imports: [WorkCentersTableComponent],
+    imports: [WorkCentersTableComponent, LoadingSpinnerComponent],
     template: `
+        @if (store.isLoading()) {
+            <app-loading-spinner message="Updating schedule..."></app-loading-spinner>
+        }
+
         <div class="work-orders-container">
             <h1 class="title">Work Orders</h1>
             <div class="work-center-activity-container">
-                <app-work-centers-table/>
+                <app-work-centers-table [workOrders]="store.items()"/>
             </div>
         </div>
     `,
@@ -34,5 +40,10 @@ import {WorkCentersTableComponent} from '../../components/work-centers-table/wor
       }
     `,
 })
-export class WorkOrdersComponent {
+export class WorkOrdersComponent implements OnInit {
+    readonly store = inject(WorkOrderStore);
+
+    ngOnInit() {
+        this.store.loadOrders();
+    }
 }

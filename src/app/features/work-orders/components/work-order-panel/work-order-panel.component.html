@@ -36,6 +36,9 @@
           formControlName="name"
           class="input-field"
           placeholder="Enter work order name">
+        @if (isInvalid('name')) {
+          <span class="error-text">Name is required</span>
+        }
       </div>
 
       <div class="field-group">
@@ -80,6 +83,9 @@
             (click)="startDp.open()"
           />
         </div>
+        @if (isInvalid('startDate')) {
+          <span class="error-text">Start date is required</span>
+        }
       </div>
 
       <div class="field-group">
@@ -96,6 +102,9 @@
             (click)="endDp.open()"
           />
         </div>
+        @if (isInvalid('startDate')) {
+          <span class="error-text">Start date is required</span>
+        }
       </div>
     </div>
   </form>

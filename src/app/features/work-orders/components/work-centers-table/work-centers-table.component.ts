@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef, model,
+  ElementRef, input, model, output,
   signal,
   viewChild
 } from '@angular/core';
@@ -19,7 +19,7 @@ import {
 } from '../../utils/timeline-columns.utils';
 import {MOCK_WORK_CENTERS, MOCK_WORK_ORDERS} from '../../../../mocks/work-orders.mock';
 import {
-  WorkCenterDocument, WorkOrder,
+  WorkCenterDocument, WorkOrderForm,
   WorkOrderActionType,
   WorkOrderDocument
 } from '../../models/work-orders.model';
@@ -47,7 +47,16 @@ export class WorkCentersTableComponent implements AfterViewInit {
 
   // Mock Data of work centers
   readonly workCenters = signal<WorkCenterDocument[]>(MOCK_WORK_CENTERS);
-  readonly workOrders = signal<WorkOrderDocument[]>(MOCK_WORK_ORDERS);
+  workOrders = input.required<WorkOrderDocument[]>();
+
+  onCreate = output<WorkOrderDocument['data']>();
+
+  onUpdate = output<{
+    docId: string;
+    data: WorkOrderDocument['data']
+  }>();
+
+  onDelete = output<string>();
 
   // Hours in milliseconds
   private readonly HOUR_MS = 60 * 60 * 1000;
@@ -91,6 +100,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
    * Calculates the position and width for each work order in pixels
    */
   timelineOrders = computed<PositionedWorkOrder[]>(() => {
+    const orders = this.workOrders();
     const columns = this.timelineColumns();
     if (columns.length === 0) return [];
 
@@ -100,7 +110,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
     // Duration of a single cell in MS based on view
     const msPerCell = getDurationPerCell(this.currentView());
 
-    return this.workOrders().map(order => {
+    return orders.map(order => {
       const startMs = new Date(order.data.startDate).getTime();
       const endMs = new Date(order.data.endDate).getTime();
 
@@ -191,13 +201,13 @@ export class WorkCentersTableComponent implements AfterViewInit {
   }
 
   panelOpen = signal(false);
-  panelData = signal<WorkOrder | null>(null);
+  panelData = signal<any | null>(null);
 
   onPanelClose(): void {
     this.closeAndResetModal();
   }
 
-  onPanelSave(workOrder: WorkOrder): void {
+  onPanelSave(workOrder: WorkOrderForm): void {
     console.log('Saved work order:', workOrder);
     this.panelOpen.set(false);
     this.panelData.set(null);
@@ -207,9 +217,6 @@ export class WorkCentersTableComponent implements AfterViewInit {
     action: WorkOrderActionType,
     order: WorkOrderDocument
   ): void {
-    console.log(action);
-    // this.selectedAction.set(null);
-
     switch (action) {
       case 'edit':
         console.log('Edit', order);
@@ -300,15 +307,15 @@ export class WorkCentersTableComponent implements AfterViewInit {
     // 3. Construct the payload for your backend or state management
     const newWorkOrder = {
       workCenterId: workCenterId,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0],
     };
 
     console.log('Successfully captured dates:', newWorkOrder);
 
     // 4. NEXT STEP: Open creation dialog
-    // this.openCreateModal(newWorkOrder);
     this.panelOpen.set(true);
+    this.panelData.set(newWorkOrder);
 
     // 5. Clear the preview after clicking so it doesn't stay stuck
     this.hoverPreview.set(null);

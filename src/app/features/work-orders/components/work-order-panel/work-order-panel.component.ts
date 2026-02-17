@@ -1,7 +1,7 @@
-import {Component, effect, inject, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, HostListener, inject, input, output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {WorkOrder} from '../../models/work-orders.model';
+import {WorkOrderForm} from '../../models/work-orders.model';
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {animate, group, query, style, transition, trigger} from '@angular/animations';
 import {NgbDateParserFormatter, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
@@ -14,6 +14,7 @@ import {DmyDateParserFormatter} from '../../utils/date-formatter';
   imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective, NgbInputDatepicker],
   templateUrl: './work-order-panel.component.html',
   styleUrls: ['./work-order-panel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     { provide: NgbDateParserFormatter, useClass: DmyDateParserFormatter }
   ],
@@ -53,10 +54,16 @@ import {DmyDateParserFormatter} from '../../utils/date-formatter';
 export class WorkOrderPanelComponent {
   private fb = inject(FormBuilder);
 
-  data = input<WorkOrder | null>(null);
+  data = input<any | null>(null);
 
   close = output<void>();
-  save = output<WorkOrder>();
+  save = output<WorkOrderForm>();
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscPressed(event: KeyboardEvent) {
+    event.preventDefault();
+    this.onClose();
+  }
 
   // Dropdown Options
   statuses: { label: string; value: string; }[] = [
@@ -70,7 +77,8 @@ export class WorkOrderPanelComponent {
     name: ['', Validators.required],
     status: ['open', Validators.required],
     endDate: ['', Validators.required],
-    startDate: ['', Validators.required]
+    startDate: ['', Validators.required],
+    workCenterId: ['', Validators.required]
   });
 
   constructor() {
@@ -86,6 +94,12 @@ export class WorkOrderPanelComponent {
         });
       }
     });
+  }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.workOrderForm.get(controlName);
+    // Only show error if the user has touched the field or tried to change it
+    return !!(control && control.invalid && (control.touched || control.dirty));
   }
 
   onClose() {

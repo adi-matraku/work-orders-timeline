@@ -1,6 +1,29 @@
-# TestGanttApp
+# Production Work Order Scheduler
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
+A high-performance, reactive timeline application built with **Angular 19.1** and **NgRx Signal Store**. This application allows production managers to visualize, create, and manage work orders across multiple work centers with real-time overlap validation.
+
+## 🚀 Key Features
+
+* **Reactive State Management**: Powered by `@ngrx/signals` for lightweight, signal-based state.
+* **Dynamic Timeline**: Interactive timeline visualization.
+* **Intelligent Validation**: Real-time scheduling conflict detection (overlap prevention).
+* **Modern UI**: Eye-catching overlays, slide-out panels, and Circular Std typography.
+
+## 🛠️ Tech Stack
+
+* **Framework**: Angular 19.1 (Standalone Components)
+* **State**: NgRx Signal Store (`withState`, `withMethods`, `rxMethod`)
+* **Styling**: SCSS with CSS Variables & Absolute Positioning
+* **UI Components**: NgbDatepicker (custom formatted), Ng-Select
+  Change Detection: OnPush Strategy (optimized performance with Signals)
+* **Forms**: Reactive Forms (Type-safe validation and dynamic patching)
+
+## 📦 Installation
+
+1. **Clone the repository**
+2. **Install dependencies**
+   ```bash
+   npm install
 
 ## Development server
 
@@ -33,27 +56,3 @@ To build the project run:
 ```bash
 ng build
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

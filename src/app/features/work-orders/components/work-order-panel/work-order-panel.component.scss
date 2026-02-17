@@ -144,6 +144,11 @@ form.panel-container {
   padding: 0 24px;
 }
 
+.field-group {
+  position: relative;
+  display: block;
+}
+
 .input-label {
   display: block;
   width: 542px;
@@ -189,32 +194,34 @@ form.panel-container {
 }
 
 /* -------------------------------------------------------------------------- */
-/* STATUS BADGES                                     */
+/* STATUS BADGES                                                              */
 /* -------------------------------------------------------------------------- */
-
 .status-badge {
   font-size: 14px;
   font-weight: 600;
 }
 
-//.status-badge[data-status="open"] {
-//  width: 51px;
-//
-//  border: 1px solid rgba(206, 251, 255, 1);
-//  background-color: rgba(228, 253, 255, 1);
-//
-//  color: rgba(62, 64, 219, 1);
-//}
+/* -------------------------------------------------------------------------- */
+/* ERROR MESSAGES                                                             */
+/* -------------------------------------------------------------------------- */
+.error-text {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 400;
+  left:0;
+  bottom: -18px;
+  position: absolute;
 
+  animation: fadeInError 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
 
-//
-///* Specifically for the 'Blocked' orange badge in your screenshot */
-//.status-badge[data-status="blocked"] {
-//  background-color: #FFF4E5;
-//  color: #B45309;
-//}
-//
-///* Placeholder for other statuses if needed */
-//.status-badge[data-status="open"] { background-color: #E0E7FF; color: #4338CA; }
-//.status-badge[data-status="in-progress"] { background-color: #EFF6FF; color: #1D4ED8; }
-//.status-badge[data-status="complete"] { background-color: #ECFDF5; color: #047857; }
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

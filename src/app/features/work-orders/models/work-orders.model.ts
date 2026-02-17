@@ -12,23 +12,20 @@ export interface WorkCenterDocument {
 export interface WorkOrderDocument {
   docId: string;
   docType: 'workOrder';
-  data: {
-    name: string;
-    workCenterId: string;
-    status: WorkOrderStatus;
-    startDate: string;
-    endDate: string;
-  };
+  data: WorkOrderData;
 }
 
-export interface WorkOrder {
+export interface WorkOrderData {
   name: string;
+  workCenterId: string;
   status: WorkOrderStatus;
   startDate: string;
   endDate: string;
 }
 
-export interface WorkOrderAction {
-  label: string;
-  value: WorkOrderActionType;
+export interface WorkOrderForm {
+  name: string;
+  status: WorkOrderStatus;
+  startDate: string;
+  endDate: string;
 }
