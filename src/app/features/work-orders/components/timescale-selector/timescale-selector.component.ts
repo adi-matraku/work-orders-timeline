@@ -11,7 +11,7 @@ import {Timescale} from '../../models/timescale.model';
   template: `
     <div class="timescale-selector">
       <span class="timescale-selector-label">Timescale</span>
-      
+
       <ng-select
         [items]="timescales"
         bindLabel="label"

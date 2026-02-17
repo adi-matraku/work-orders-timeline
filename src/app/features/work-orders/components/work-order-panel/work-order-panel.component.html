@@ -1,0 +1,81 @@
+<div class="panel-overlay" (click)="onClose()" @panelAnimation>
+  <form
+    class="panel-container"
+    (click)="$event.stopPropagation()"
+    [formGroup]="workOrderForm"
+    (ngSubmit)="submit()">
+
+    <div class="header">
+      <div class="title-group">
+        <h2 class="main-title">
+          {{ data() ? 'Edit Work Order' : 'Work Order Details' }}
+        </h2>
+        <p class="sub-title">Specify the dates, name and status for this order</p>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn-cancel" (click)="onClose()">
+          <span class="btn-cancel-text">Cancel</span>
+        </button>
+
+        <button type="submit" class="btn-create" [disabled]="workOrderForm.invalid">
+          <span class="btn-create-text">
+            {{ data() ? 'Save' : 'Create' }}
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div class="header-divider"></div>
+
+    <div class="form-content">
+
+      <div class="field-group">
+        <label class="input-label">Work Order Name</label>
+        <input
+          type="text"
+          formControlName="name"
+          class="input-field"
+          placeholder="Enter work order name">
+      </div>
+
+      <div class="field-group">
+        <label class="input-label">Status</label>
+
+        <ng-select
+          class="status-dropdown custom-dropdown-panel"
+          [items]="statuses"
+          bindLabel="label"
+          bindValue="value"
+          formControlName="status"
+          [appendTo]="'body'"
+          [clearable]="false"
+          [searchable]="false"
+          >
+
+          <ng-template ng-label-tmp let-item="item">
+            <span class="status-badge" [attr.data-status]="item.value">
+              {{ item.label }}
+            </span>
+          </ng-template>
+
+          <ng-template ng-option-tmp let-item="item">
+            <span class="status-badge" [attr.data-status]="item.value">
+              {{ item.label }}
+            </span>
+          </ng-template>
+        </ng-select>
+      </div>
+
+      <div class="field-group">
+        <label class="input-label">End date</label>
+        <input type="text" formControlName="endDate" class="input-field">
+      </div>
+
+      <div class="field-group">
+        <label class="input-label">Start date</label>
+        <input type="text" formControlName="startDate" class="input-field">
+      </div>
+
+    </div>
+  </form>
+</div>

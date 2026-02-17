@@ -1,4 +1,5 @@
 type WorkOrderStatus = 'open' | 'in-progress' | 'complete' | 'blocked';
+export type WorkOrderActionType = 'edit' | 'delete';
 
 export interface WorkCenterDocument {
   docId: string;
@@ -18,4 +19,16 @@ export interface WorkOrderDocument {
     startDate: string;
     endDate: string;
   };
+}
+
+export interface WorkOrder {
+  name: string;
+  status: WorkOrderStatus;
+  startDate: string;
+  endDate: string;
+}
+
+export interface WorkOrderAction {
+  label: string;
+  value: WorkOrderActionType;
 }

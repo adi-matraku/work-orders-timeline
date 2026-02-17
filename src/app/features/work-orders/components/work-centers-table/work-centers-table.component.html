@@ -74,7 +74,8 @@
                               [searchable]="false"
                               [appendTo]="'body'"
                               [markFirst]="false"
-                              (change)="onWorkOrderAction($event, order)"
+                              [(ngModel)]="selectedAction"
+                              (ngModelChange)="onWorkOrderAction($event, order)"
                             >
                             </ng-select>
                           </div>
@@ -118,3 +119,10 @@
     </div>
   </div>
 </div>
+@if (panelOpen()) {
+  <app-work-order-panel
+    [data]="panelData()"
+    (close)="onPanelClose()"
+    (save)="onPanelSave($event)"
+  />
+}

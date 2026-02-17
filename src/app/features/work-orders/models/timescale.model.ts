@@ -1,4 +1,11 @@
+import {WorkOrderDocument} from './work-orders.model';
+
 export type Timescale = 'hour' | 'day' | 'week' | 'month';
+
+export interface PositionedWorkOrder extends WorkOrderDocument {
+  left: number;
+  width: number;
+}
 
 export interface TimelineColumn {
   date: Date;

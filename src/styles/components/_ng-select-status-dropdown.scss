@@ -1,0 +1,145 @@
+/* =========================================================
+   ng-select – status-dropdown (BASE)
+   ========================================================= */
+.ng-select.status-dropdown {
+  width: 543px;
+  height: 38px;
+}
+
+/* =========================================================
+   container
+   ========================================================= */
+.ng-select.status-dropdown .ng-select-container {
+  height: 38px;
+  min-height: 38px;
+
+  background-color: #ffffff;
+  border-radius: 5px;
+
+  box-shadow: 0 0 0 1px rgba(216, 220, 235, 1),
+  0 1.5px 3px -1.5px rgba(200, 207, 233, 1),
+  0 1px 0.5px -1px rgba(216, 220, 235, 1);
+  border: none;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+}
+
+/* Preserve border radius when dropdown is opened */
+.ng-select.status-dropdown.ng-select-opened .ng-select-container {
+  border-radius: 5px;
+}
+
+/* =========================================================
+   REMOVE focus / hover / open artifacts
+   ========================================================= */
+.ng-select.status-dropdown.ng-select-focused .ng-select-container,
+.ng-select.status-dropdown.ng-select-opened .ng-select-container,
+.ng-select.status-dropdown:hover .ng-select-container {
+  box-shadow: 0 0 0 2px rgba(170, 175, 255, 1);
+  border: none;
+  outline: none;
+}
+
+/* =========================================================
+   value container
+   ========================================================= */
+.ng-select.status-dropdown .ng-select-container .ng-value-container {
+  padding-left: 12px;
+  padding-right: 36px;
+}
+
+/* =========================================================
+   status-dropdown – selected value badge
+   ========================================================= */
+.ng-select.status-dropdown
+.ng-select-container
+.ng-value-container
+.ng-value
+.status-badge {
+  display: flex;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+.ng-select.status-dropdown
+.ng-value
+.status-badge[data-status="open"] {
+  width: 51px;
+  height: 22px;
+  color: rgba(0, 176, 191, 1);
+  font-size: 14px;
+  padding: 3px 8px;
+  text-align: center;
+  border: 1px solid rgba(206, 251, 255, 1);
+}
+
+.ng-select.status-dropdown
+.ng-value
+.status-badge[data-status="blocked"] {
+  width: 67px;
+  height: 18px;
+
+  padding: 2px 8px;
+  background-color: rgba(252, 238, 181, 1);
+  border: none;
+  color: rgba(47, 48, 89, 1);
+}
+
+.ng-select.status-dropdown
+.ng-value
+.status-badge[data-status="in-progress"] {
+  width: 87px;
+  padding: 2px 8px;
+
+  color: rgba(62, 64, 219, 1);
+  background-color: rgba(214, 216, 255, 1);
+}
+
+.ng-select.status-dropdown
+.ng-value
+.status-badge[data-status="complete"] {
+  width: 79px;
+  padding: 2px 8px;
+
+  color: rgba(8, 162, 104, 1);
+  background-color: rgba(225, 255, 204, 1);
+}
+
+
+.ng-select.status-dropdown .ng-select-container .ng-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #3E40DB;
+  line-height: 17px;
+}
+
+.ng-select.status-dropdown .ng-input {
+  caret-color: transparent;
+}
+
+.ng-select.status-dropdown input {
+  outline: none;
+  box-shadow: none;
+}
+
+.ng-dropdown-panel.status-dropdown {
+  width: 543px;
+  height: 136px;
+  box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1),
+  0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+  0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+
+  .ng-dropdown-panel-items {
+    .ng-option {
+      width: 543px;
+      height: 28px;
+      padding: 5px 12px;
+      line-height: 17px;
+    }
+  }
+}

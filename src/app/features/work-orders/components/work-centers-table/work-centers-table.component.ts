@@ -3,13 +3,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef,
+  ElementRef, model,
   signal,
   viewChild
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TimescaleSelectorComponent} from '../timescale-selector/timescale-selector.component';
-import {TimelineColumn, Timescale, TIMESCALE_CONFIG} from '../../models/timescale.model';
+import {PositionedWorkOrder, TimelineColumn, Timescale, TIMESCALE_CONFIG} from '../../models/timescale.model';
 import {
   buildDayColumns,
   buildHourColumns,
@@ -18,13 +18,19 @@ import {
   getDurationPerCell
 } from '../../utils/timeline-columns.utils';
 import {MOCK_WORK_CENTERS, MOCK_WORK_ORDERS} from '../../../../mocks/work-orders.mock';
-import {WorkCenterDocument, WorkOrderDocument} from '../../models/work-orders.model';
+import {
+  WorkCenterDocument, WorkOrder,
+  WorkOrderActionType,
+  WorkOrderDocument
+} from '../../models/work-orders.model';
 import {NgSelectComponent} from '@ng-select/ng-select';
+import {FormsModule} from '@angular/forms';
+import {WorkOrderPanelComponent} from '../work-order-panel/work-order-panel.component';
 
 @Component({
   selector: 'app-work-centers-table',
   standalone: true,
-  imports: [CommonModule, TimescaleSelectorComponent, NgSelectComponent],
+  imports: [CommonModule, TimescaleSelectorComponent, NgSelectComponent, FormsModule, WorkOrderPanelComponent],
   templateUrl: './work-centers-table.component.html',
   styleUrls: ['./work-centers-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -45,6 +51,8 @@ export class WorkCentersTableComponent implements AfterViewInit {
 
   // Hours in milliseconds
   private readonly HOUR_MS = 60 * 60 * 1000;
+
+  readonly selectedAction = model<string | null>(null);
 
   readonly workOrderActions = [
     {label: 'Edit', value: 'edit'},
@@ -82,7 +90,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
   /**
    * Calculates the position and width for each work order in pixels
    */
-  timelineOrders = computed(() => {
+  timelineOrders = computed<PositionedWorkOrder[]>(() => {
     const columns = this.timelineColumns();
     if (columns.length === 0) return [];
 
@@ -182,15 +190,32 @@ export class WorkCentersTableComponent implements AfterViewInit {
     this.currentView.set(mode);
   }
 
+  panelOpen = signal(false);
+  panelData = signal<WorkOrder | null>(null);
+
+  onPanelClose(): void {
+    this.closeAndResetModal();
+  }
+
+  onPanelSave(workOrder: WorkOrder): void {
+    console.log('Saved work order:', workOrder);
+    this.panelOpen.set(false);
+    this.panelData.set(null);
+  }
+
   onWorkOrderAction(
-    action: 'edit' | 'delete',
+    action: WorkOrderActionType,
     order: WorkOrderDocument
   ): void {
-    if (!action) return;
+    console.log(action);
+    // this.selectedAction.set(null);
 
     switch (action) {
       case 'edit':
         console.log('Edit', order);
+        const { workCenterId, ...workOrderData } = order.data;
+        this.panelData.set(workOrderData);
+        this.panelOpen.set(true);
         break;
 
       case 'delete':
@@ -236,17 +261,16 @@ export class WorkCentersTableComponent implements AfterViewInit {
     const rightPos = leftPos + PREVIEW_WIDTH;
 
     // 4. Collision Detection
-    // Filter existing orders for THIS row only
+    // Filter existing orders for this row only
     const existingOrdersInRow = this.timelineOrders().filter(
       (order) => order.data.workCenterId === workCenterId
     );
 
-    // Check if our 1-unit-wide rectangle hits ANY existing order
+    // Check if our rectangle hits any existing order
     const isOverlapping = existingOrdersInRow.some((order) => {
       const orderStart = order.left;
       const orderEnd = order.left + order.width;
 
-      // Returns true if there is even a 1px overlap
       return leftPos < orderEnd && rightPos > orderStart;
     });
 
@@ -284,6 +308,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
 
     // 4. NEXT STEP: Open creation dialog
     // this.openCreateModal(newWorkOrder);
+    this.panelOpen.set(true);
 
     // 5. Clear the preview after clicking so it doesn't stay stuck
     this.hoverPreview.set(null);
@@ -308,5 +333,11 @@ export class WorkCentersTableComponent implements AfterViewInit {
     const endDate = new Date(startTimeMs + durationMs);
 
     return {startDate, endDate};
+  }
+
+  private closeAndResetModal(): void {
+    this.panelOpen.set(false);
+    this.panelData.set(null);
+    this.selectedAction.set(null);
   }
 }

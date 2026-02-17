@@ -1,0 +1,220 @@
+/* -------------------------------------------------------------------------- */
+/* PANEL OVERLAY & CONTAINER                                                  */
+/* -------------------------------------------------------------------------- */
+
+.panel-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(247, 249, 252, 0.5);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1000;
+}
+
+form.panel-container {
+  display: flex;
+  flex-direction: column;
+  width: 591px;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 12px 0px 0px 12px;
+  box-shadow: 0 5px 15px 0 rgba(216, 220, 235, 1),
+  0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+  0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  padding: 16px 0 0 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* HEADER SECTION                                                             */
+/* -------------------------------------------------------------------------- */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 24px;
+}
+
+.main-title {
+  width: 253px;
+  height: 25px;
+  color: rgba(47, 48, 89, 1);
+  font-size: 20px;
+  font-weight: 600; // increased just for making it look better
+  margin: 0;
+}
+
+.sub-title {
+  width: 352px;
+  height: 20px;
+  font-weight: 500; // increased just for making it look better
+  color: rgba(104, 113, 150, 1);
+  font-size: 16px;
+  margin-top: 4px;
+
+}
+
+.header-divider {
+  width: 591px;
+
+  height: 1px;
+
+  border: 1px solid rgba(230, 235, 240, 1);
+  margin-top: 16px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ACTION BUTTONS                                                             */
+/* -------------------------------------------------------------------------- */
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-cancel {
+  width: 66px;
+  height: 32px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 1),
+  0 1px 3px 0 rgba(200, 207, 233, 1);
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5px 8px;
+
+  &-text {
+    width: 50px;
+    height: 19px;
+    color: rgba(47, 48, 89, 1);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.33px;
+  }
+}
+
+.btn-create {
+  width: 66px;
+  height: 32px;
+  background-color: #5865F2;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5px 10px;
+
+  &-text {
+    width: 46px;
+    height: 19px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 15px;
+    font-weight: 500;
+  }
+}
+
+.btn-cancel:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 1),
+  0 0.5px 1px 0 rgba(200, 207, 233, 1);
+  background-color: #f9fafb;
+}
+
+.btn-create:active {
+  transform: translateY(1px);
+  background-color: #4752c4;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-cancel, .btn-create {
+  transition: all 0.1s ease;
+}
+
+/* -------------------------------------------------------------------------- */
+/* FORM CONTENT & INPUTS                                                      */
+/* -------------------------------------------------------------------------- */
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+  padding: 0 24px;
+}
+
+.input-label {
+  display: block;
+  width: 542px;
+  height: 16px;
+  color: rgba(104, 113, 150, 1);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.input-field {
+  width: 542px;
+  height: 38px;
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 5px;
+  border: none;
+  padding: 0 12px;
+
+  box-shadow: 0 0 0 1px rgba(216, 220, 235, 1),
+  0 1.5px 3px -1.5px rgba(200, 207, 233, 1),
+  0 1px 0.5px -1px rgba(216, 220, 235, 1);
+  font-size: 15px;
+  color: rgba(47, 48, 89, 1);
+
+  outline: none;
+  transition: box-shadow 120ms ease, background-color 120ms ease;
+
+  &:hover,
+  &:focus {
+    box-shadow:
+      0 0 0 2px rgba(170, 175, 255, 1),
+      0 1.5px 3px -1.5px rgba(200, 207, 233, 1),
+      0 1px 0.5px -1px rgba(216, 220, 235, 1);
+  }
+
+  &::placeholder {
+    color: rgba(164, 170, 192, 1);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 17px;
+    opacity: 1;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* STATUS BADGES                                     */
+/* -------------------------------------------------------------------------- */
+
+.status-badge {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+//.status-badge[data-status="open"] {
+//  width: 51px;
+//
+//  border: 1px solid rgba(206, 251, 255, 1);
+//  background-color: rgba(228, 253, 255, 1);
+//
+//  color: rgba(62, 64, 219, 1);
+//}
+
+
+//
+///* Specifically for the 'Blocked' orange badge in your screenshot */
+//.status-badge[data-status="blocked"] {
+//  background-color: #FFF4E5;
+//  color: #B45309;
+//}
+//
+///* Placeholder for other statuses if needed */
+//.status-badge[data-status="open"] { background-color: #E0E7FF; color: #4338CA; }
+//.status-badge[data-status="in-progress"] { background-color: #EFF6FF; color: #1D4ED8; }
+//.status-badge[data-status="complete"] { background-color: #ECFDF5; color: #047857; }
