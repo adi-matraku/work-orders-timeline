@@ -4,13 +4,19 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {WorkOrder} from '../../models/work-orders.model';
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {animate, group, query, style, transition, trigger} from '@angular/animations';
+import {NgbDateParserFormatter, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
+import {isoToNgbDate} from '../../utils/date-utils';
+import {DmyDateParserFormatter} from '../../utils/date-formatter';
 
 @Component({
   selector: 'app-work-order-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective, NgbInputDatepicker],
   templateUrl: './work-order-panel.component.html',
   styleUrls: ['./work-order-panel.component.scss'],
+  providers: [
+    { provide: NgbDateParserFormatter, useClass: DmyDateParserFormatter }
+  ],
   animations: [
     trigger('panelAnimation', [
       transition(':enter', [
@@ -62,7 +68,7 @@ export class WorkOrderPanelComponent {
 
   workOrderForm: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    status: ['', Validators.required],
+    status: ['open', Validators.required],
     endDate: ['', Validators.required],
     startDate: ['', Validators.required]
   });
@@ -72,7 +78,12 @@ export class WorkOrderPanelComponent {
       const value = this.data();
 
       if (value) {
-        this.workOrderForm.patchValue(value);
+        console.warn(value);
+        this.workOrderForm.patchValue({
+          ...value,
+          startDate: isoToNgbDate(value.startDate),
+          endDate: isoToNgbDate(value.endDate)
+        });
       }
     });
   }

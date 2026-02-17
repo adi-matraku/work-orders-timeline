@@ -67,15 +67,36 @@
       </div>
 
       <div class="field-group">
-        <label class="input-label">End date</label>
-        <input type="text" formControlName="endDate" class="input-field">
+        <label class="input-label">Start date</label>
+
+        <div class="datepicker-wrapper">
+          <input
+            class="input-field"
+            formControlName="startDate"
+            ngbDatepicker
+            #startDp="ngbDatepicker"
+            placeholder="Select a date"
+            readonly
+            (click)="startDp.open()"
+          />
+        </div>
       </div>
 
       <div class="field-group">
-        <label class="input-label">Start date</label>
-        <input type="text" formControlName="startDate" class="input-field">
-      </div>
+        <label class="input-label">End date</label>
 
+        <div class="datepicker-wrapper">
+          <input
+            class="input-field"
+            formControlName="endDate"
+            ngbDatepicker
+            #startDp="ngbDatepicker"
+            placeholder="Select a date"
+            readonly
+            (click)="startDp.open()"
+          />
+        </div>
+      </div>
     </div>
   </form>
 </div>
