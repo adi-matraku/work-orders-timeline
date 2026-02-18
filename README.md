@@ -2,7 +2,7 @@
 
 A high-performance, reactive timeline application built with **Angular 19.1** and **NgRx Signal Store**. This application allows production managers to visualize, create, and manage work orders across multiple work centers with real-time overlap validation.
 
-You can test the app via netlify: [text](https://work-orders-timeline.netlify.app/work-orders)
+You can test the app via netlify: [work-orders-timeline](https://work-orders-timeline.netlify.app/work-orders)
 
 ## 🚀 Key Features
 
