@@ -23,6 +23,11 @@ export class WorkOrderService {
     return of(newDoc).pipe(delay(1000));
   }
 
+  // Simulate an update call
+  updateOrder(doc: WorkOrderDocument): Observable<WorkOrderDocument> {
+    return of(doc).pipe(delay(800));
+  }
+
   // Simulate a delete call
   deleteOrder(id: string): Observable<string> {
     return of(id).pipe(delay(1000));

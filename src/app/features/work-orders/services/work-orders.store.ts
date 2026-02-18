@@ -85,6 +85,7 @@ export const WorkOrderStore = signalStore(
                   items: [...currentState.items, newDoc],
                   isLoading: false
                 });
+                toast.show('Saved successfully!', 'success');
               }),
               catchError(() => handleError('Save failed'))
             );
@@ -95,31 +96,30 @@ export const WorkOrderStore = signalStore(
       /**
        * Updates an existing Work Order.
        */
-      // updateOrder: rxMethod<{ docId: string; data: WorkOrderData }>(
-      //   pipe(
-      //     tap(() => patchState(store, { isLoading: true, error: null })),
-      //     switchMap(({ docId, data }) => {
-      //       if (hasOverlap(data, docId)) {
-      //         patchState(store, { error: 'Update failed: Schedule overlap.', isLoading: false });
-      //         return of(null);
-      //       }
-      //
-      //       return service.updateOrder(docId, data).pipe(
-      //         tap(updatedDoc => {
-      //           const { items } = getState(store);
-      //           patchState(store, {
-      //             items: items.map(i => i.docId === docId ? updatedDoc : i),
-      //             isLoading: false
-      //           });
-      //         }),
-      //         catchError(() => {
-      //           patchState(store, { error: 'Update failed', isLoading: false });
-      //           return of(null);
-      //         })
-      //       );
-      //     })
-      //   )
-      // ),
+      updateOrder: rxMethod<WorkOrderDocument>(
+        pipe(
+          tap(() => patchState(store, { isLoading: true, error: null })),
+          switchMap((doc) => {
+            // Check overlap (exclude current item by its ID)
+            if (hasOverlap(doc.data, doc.docId)) {
+              return handleError('Schedule overlap detected.');
+            }
+
+            return service.updateOrder(doc).pipe(
+              tap((updatedDoc) => {
+                patchState(store, (state) => ({
+                  items: state.items.map((item) =>
+                    item.docId === updatedDoc.docId ? updatedDoc : item
+                  ),
+                  isLoading: false
+                }));
+                toast.show('Update successful!', 'success');
+              }),
+              catchError(() => handleError('Failed to save changes'))
+            );
+          })
+        )
+      ),
 
       /**
        * Removes a Work Order by docId.

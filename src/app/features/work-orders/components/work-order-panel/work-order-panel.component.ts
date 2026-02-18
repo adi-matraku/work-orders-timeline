@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, effect, HostListener, inject, input, output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {WorkOrderData, WorkOrderDocument, WorkOrderPanelInput} from '../../models/work-orders.model';
+import {WorkOrderData, WorkOrderPanelInput, WorkOrderSaveEvent} from '../../models/work-orders.model';
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {animate, group, query, style, transition, trigger} from '@angular/animations';
 import {NgbDateParserFormatter, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
@@ -14,7 +14,6 @@ import {DmyDateParserFormatter} from '../../utils/date-formatter';
   imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective, NgbInputDatepicker],
   templateUrl: './work-order-panel.component.html',
   styleUrls: ['./work-order-panel.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {provide: NgbDateParserFormatter, useClass: DmyDateParserFormatter}
   ],
@@ -49,7 +48,8 @@ import {DmyDateParserFormatter} from '../../utils/date-formatter';
         ])
       ])
     ])
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkOrderPanelComponent {
   private fb = inject(FormBuilder);
@@ -57,10 +57,7 @@ export class WorkOrderPanelComponent {
   data = input<WorkOrderPanelInput | null>(null);
 
   close = output<void>();
-  save = output<
-    | { mode: 'create'; data: WorkOrderData }
-    | { mode: 'edit'; data: WorkOrderDocument }
-  >();
+  save = output<WorkOrderSaveEvent>();
 
   @HostListener('document:keydown.escape', ['$event'])
   onEscPressed(event: KeyboardEvent) {
@@ -101,6 +98,7 @@ export class WorkOrderPanelComponent {
         return;
       }
 
+      // Create mode - prefill with template data having start and end date
       const template = input.data;
 
       this.workOrderForm.patchValue({

@@ -1,4 +1,4 @@
-import {Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {NgSelectModule} from '@ng-select/ng-select';
@@ -62,6 +62,7 @@ import {Timescale} from '../../models/timescale.model';
       }
     }
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimescaleSelectorComponent {
   readonly value = input<Timescale>('month');

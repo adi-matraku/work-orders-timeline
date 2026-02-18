@@ -1,4 +1,4 @@
-import {Component, inject, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, input} from '@angular/core';
 import {ToastService} from './services/toast.service';
 
 @Component({
@@ -21,14 +21,21 @@ import {ToastService} from './services/toast.service';
       padding: 12px 16px;
       border-radius: 8px;
 
-      background: rgba(255, 92, 92, 0.95);
       color: #fff;
 
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 500;
 
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
       animation: slide-in 160ms ease-out;
+    }
+
+    .error {
+      background: rgba(255, 92, 92, 0.95);
+    }
+
+    .success {
+      background: rgba(46, 184, 92, 0.95);
     }
 
     @keyframes slide-in {
@@ -41,10 +48,9 @@ import {ToastService} from './services/toast.service';
         opacity: 1;
       }
     }
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToastComponent {
   readonly toastService = inject(ToastService);
-
-  // message = input.required<string>();
 }

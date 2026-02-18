@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {ToastComponent} from './shared/toast.component';
 
@@ -27,6 +27,7 @@ import {ToastComponent} from './shared/toast.component';
       padding: 20px 0;
       margin-bottom: 45px;
     }
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {}

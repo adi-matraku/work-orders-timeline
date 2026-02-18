@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {WorkCentersTableComponent} from '../../components/work-centers-table/work-centers-table.component';
 import {WorkOrderStore} from "../../services/work-orders.store";
 import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.component";
@@ -15,7 +15,12 @@ import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.compon
         <div class="work-orders-container">
             <h1 class="title">Work Orders</h1>
             <div class="work-center-activity-container">
-                <app-work-centers-table [workOrders]="store.items()" (onCreate)="store.addOrder($event)"/>
+                <app-work-centers-table
+                        [workOrders]="store.items()"
+                        (onCreate)="store.addOrder($event)"
+                        (onUpdate)="store.updateOrder($event)"
+                        (onDelete)="store.removeOrder($event)"
+                />
             </div>
         </div>
     `,
@@ -41,6 +46,7 @@ import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.compon
         box-sizing: border-box;
       }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkOrdersComponent implements OnInit {
     readonly store = inject(WorkOrderStore);

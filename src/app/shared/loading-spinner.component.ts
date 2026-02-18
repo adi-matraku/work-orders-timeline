@@ -1,4 +1,4 @@
-import {Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 @Component({
@@ -66,7 +66,8 @@ import {CommonModule} from '@angular/common';
       color: #1e293b;
       margin: 0;
       letter-spacing: 0.5px;
-    }`
+    }`,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoadingSpinnerComponent {
   // Optional message to show under the spinner

@@ -126,3 +126,10 @@
     (save)="onPanelSave($event)"
   />
 }
+@if (orderToDelete()) {
+  <app-confirm-dialog
+    title="Delete Work Order"
+    [message]="'Are you sure you want to delete ' + orderToDelete()!.docId + '?'"
+    (confirmed)="confirmDelete()"
+    (canceled)="orderToDelete.set(null); selectedAction.set(null);" />
+}

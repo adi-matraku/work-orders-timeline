@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef, inject, input, model, output,
+  ElementRef, inject, input, model, output, Signal,
   signal,
   viewChild
 } from '@angular/core';
@@ -26,37 +26,35 @@ import {
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {FormsModule} from '@angular/forms';
 import {WorkOrderPanelComponent} from '../work-order-panel/work-order-panel.component';
+import {ConfirmDialogComponent} from '../../../../shared/confirm-dialog.component';
 
 @Component({
   selector: 'app-work-centers-table',
   standalone: true,
-  imports: [CommonModule, TimescaleSelectorComponent, NgSelectComponent, FormsModule, WorkOrderPanelComponent],
+  imports: [CommonModule, TimescaleSelectorComponent, NgSelectComponent, FormsModule, WorkOrderPanelComponent, ConfirmDialogComponent],
   templateUrl: './work-centers-table.component.html',
   styleUrls: ['./work-centers-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkCentersTableComponent implements AfterViewInit {
-  scrollContainer = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
+  readonly scrollContainer = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
 
   readonly currentView = signal<Timescale>('month');
 
   // Cell width configuration for each view
-  cellWidth = computed(() => {
+  readonly cellWidth = computed(() => {
     return TIMESCALE_CONFIG[this.currentView()].cellWidth;
   });
 
   // Mock Data of work centers
   readonly workCenters = signal<WorkCenterDocument[]>(MOCK_WORK_CENTERS);
-  workOrders = input.required<WorkOrderDocument[]>();
+  readonly workOrders = input.required<WorkOrderDocument[]>();
 
-  onCreate = output<WorkOrderData>();
+  readonly onCreate = output<WorkOrderData>();
+  readonly onUpdate = output<WorkOrderDocument>();
+  readonly onDelete = output<string>();
 
-  onUpdate = output<{
-    docId: string;
-    data: WorkOrderDocument
-  }>();
-
-  onDelete = output<string>();
+  orderToDelete = signal<PositionedWorkOrder | null>(null);
 
   // Hours in milliseconds
   private readonly HOUR_MS = 60 * 60 * 1000;
@@ -228,7 +226,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
     if (workOrder.mode === 'create') {
       this.onCreate.emit(workOrder.data);
     } else {
-      // this.store.updateOrder(workOrder.data);
+      this.onUpdate.emit(workOrder.data);
     }
   }
 
@@ -245,6 +243,7 @@ export class WorkCentersTableComponent implements AfterViewInit {
 
       case 'delete':
         console.log('Delete', order);
+        this.orderToDelete.set(order);
         break;
     }
   }
@@ -357,6 +356,14 @@ export class WorkCentersTableComponent implements AfterViewInit {
     const endDate = new Date(startTimeMs + durationMs);
 
     return {startDate, endDate};
+  }
+
+  confirmDelete() {
+    if (this.orderToDelete()) {
+      this.onDelete.emit(this.orderToDelete()!.docId);
+      this.orderToDelete.set(null);
+      this.selectedAction.set(null);
+    }
   }
 
   /**
