@@ -1,23 +1,31 @@
-<div class="panel-overlay" (click)="onClose()" @panelAnimation>
+<div class="panel-overlay"
+     escClose
+     (esc)="onClose()"
+     (click)="onClose()"
+     role="presentation"
+     @panelAnimation>
   <form
     class="panel-container"
+    role="dialog"
+    aria-labelledby="panel-title"
+    aria-describedby="panel-description"
     (click)="$event.stopPropagation()"
     [formGroup]="workOrderForm"
     (ngSubmit)="submit()">
 
     <div class="header">
       <div class="title-group">
-        <h2 class="main-title">
+        <h2 class="main-title" id="panel-title">
           {{ data() ? 'Edit Work Order' : 'Work Order Details' }}
         </h2>
-        <p class="sub-title">Specify the dates, name and status for this order</p>
+        <p class="sub-title" id="panel-description">Specify the dates, name and status for this order</p>
       </div>
       <div class="actions">
-        <button type="button" class="btn-cancel" (click)="onClose()">
+        <button type="button" class="btn-cancel" aria-label="Cancel and close panel" (click)="onClose()">
           <span class="btn-cancel-text">Cancel</span>
         </button>
 
-        <button type="submit" class="btn-submit">
+        <button type="submit" class="btn-submit" [attr.aria-label]="data() ? 'Save work order' : 'Create work order'">
           <span class="btn-submit-text">
             {{ data() ? 'Save' : 'Create' }}
           </span>
@@ -32,10 +40,15 @@
       <div class="field-group">
         <label class="input-label">Work Order Name</label>
         <input
+          autoFocusElement
           type="text"
           formControlName="name"
           class="input-field"
-          placeholder="Enter work order name">
+          placeholder="Enter work order name"
+          aria-required="true"
+          [attr.aria-invalid]="isInvalid('name')"
+        />
+
         @if (isInvalid('name')) {
           <span class="error-text">Name is required</span>
         }
@@ -79,7 +92,8 @@
             ngbDatepicker
             #startDp="ngbDatepicker"
             placeholder="Select a date"
-            readonly
+            aria-haspopup="dialog"
+            aria-label="Start date"
             (click)="startDp.open()"
           />
         </div>
@@ -98,7 +112,8 @@
             ngbDatepicker
             #endDp="ngbDatepicker"
             placeholder="Select a date"
-            readonly
+            aria-haspopup="dialog"
+            aria-label="End date"
             (click)="endDp.open()"
           />
         </div>

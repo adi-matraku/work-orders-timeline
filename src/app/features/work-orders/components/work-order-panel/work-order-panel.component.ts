@@ -1,21 +1,34 @@
-import {ChangeDetectionStrategy, Component, effect, HostListener, inject, input, output} from '@angular/core';
+import {
+  afterNextRender,
+  ChangeDetectionStrategy,
+  Component,
+  effect, ElementRef,
+  HostListener,
+  inject,
+  input,
+  output, viewChild
+} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {WorkOrderData, WorkOrderPanelInput, WorkOrderSaveEvent} from '../../models/work-orders.model';
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {animate, group, query, style, transition, trigger} from '@angular/animations';
-import {NgbDateParserFormatter, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDateParserFormatter, NgbDatepickerKeyboardService, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
 import {isoToNgbDate, ngbDateToIso} from '../../utils/date-utils';
 import {DmyDateParserFormatter} from '../../utils/date-formatter';
+import {CustomKeyboardService} from '../../utils/datepicker-keyboard';
+import {EscCloseDirective} from '../../directives/esc-close.directive';
+import {AutoFocusDirective} from '../../directives/auto-focus.directive';
 
 @Component({
   selector: 'app-work-order-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective, NgbInputDatepicker],
+  imports: [CommonModule, ReactiveFormsModule, NgSelectComponent, NgLabelTemplateDirective, NgOptionTemplateDirective, NgbInputDatepicker, EscCloseDirective, AutoFocusDirective],
   templateUrl: './work-order-panel.component.html',
   styleUrls: ['./work-order-panel.component.scss'],
   providers: [
-    {provide: NgbDateParserFormatter, useClass: DmyDateParserFormatter}
+    {provide: NgbDateParserFormatter, useClass: DmyDateParserFormatter},
+    { provide: NgbDatepickerKeyboardService, useClass: CustomKeyboardService }
   ],
   animations: [
     trigger('panelAnimation', [
@@ -58,12 +71,6 @@ export class WorkOrderPanelComponent {
 
   close = output<void>();
   save = output<WorkOrderSaveEvent>();
-
-  @HostListener('document:keydown.escape', ['$event'])
-  onEscPressed(event: KeyboardEvent) {
-    event.preventDefault();
-    this.onClose();
-  }
 
   // Dropdown Options
   statuses: { label: string; value: string; }[] = [
