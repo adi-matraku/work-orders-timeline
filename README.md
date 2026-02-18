@@ -13,7 +13,7 @@ A high-performance, reactive timeline application built with **Angular 19.1** an
 
 * **Framework**: Angular 19.1 (Standalone Components)
 * **State**: NgRx Signal Store (`withState`, `withMethods`, `rxMethod`)
-* **Styling**: SCSS with CSS Variables & Absolute Positioning
+* **Styling**: SCSS
 * **UI Components**: NgbDatepicker (custom formatted), Ng-Select
   Change Detection: OnPush Strategy (optimized performance with Signals)
 * **Forms**: Reactive Forms (Type-safe validation and dynamic patching)
