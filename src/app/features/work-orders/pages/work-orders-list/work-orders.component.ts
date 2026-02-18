@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {WorkCentersTableComponent} from '../../components/work-centers-table/work-centers-table.component';
 import {WorkOrderStore} from "../../services/work-orders.store";
-import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.component";
+import {LoadingSpinnerComponent} from "../../../../shared/components/loading-spinner.component";
 
 @Component({
     selector: 'app-work-orders',
@@ -28,9 +28,7 @@ import {LoadingSpinnerComponent} from "../../../../shared/loading-spinner.compon
       .work-orders-container {
         width: 100%;
         height: 100%;
-      }
-
-      ;
+      };
 
       .title {
         width: 142px;

@@ -1,10 +1,11 @@
-import {inject} from '@angular/core';
-import {getState, patchState, signalStore, withMethods, withState} from '@ngrx/signals';
+import {effect, inject} from '@angular/core';
+import {getState, patchState, signalStore, withHooks, withMethods, withState} from '@ngrx/signals';
 import {rxMethod} from '@ngrx/signals/rxjs-interop';
 import {catchError, of, pipe, switchMap, tap} from 'rxjs';
 import {WorkOrderData, WorkOrderDocument} from '../models/work-orders.model';
 import {WorkOrderService} from './work-orders.service';
 import {ToastService} from '../../../shared/services/toast.service';
+import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
 export interface WorkOrderState {
   items: WorkOrderDocument[];
@@ -21,6 +22,22 @@ const initialState: WorkOrderState = {
 export const WorkOrderStore = signalStore(
   {providedIn: 'root'},
   withState(initialState),
+  withHooks({
+    onInit(store) {
+      const storage = inject(LocalStorageService);
+
+      // 1. Read from LocalStorage immediately on initialization
+      const savedOrders = storage.get<WorkOrderDocument[]>('work_orders');
+      if (savedOrders) {
+        patchState(store, { items: savedOrders });
+      }
+
+      effect(() => {
+        const { items } = getState(store);
+        storage.set('work_orders', items);
+      });
+    }
+  }),
   withMethods((store, service = inject(WorkOrderService), toast = inject(ToastService)) => {
 
     /**
@@ -57,12 +74,14 @@ export const WorkOrderStore = signalStore(
       loadOrders: rxMethod<void>(
         pipe(
           tap(() => patchState(store, {isLoading: true})),
-          switchMap(() => service.getOrders().pipe(
-            tap(items => patchState(store, {items, isLoading: false})),
-            catchError(() =>
-              handleError('Failed to load schedule')
+          switchMap(() => {
+            return service.getOrders().pipe(
+              tap(items => patchState(store, {items, isLoading: false})),
+              catchError(() =>
+                handleError('Failed to load schedule')
+              )
             )
-          ))
+          })
         )
       ),
 
@@ -74,7 +93,7 @@ export const WorkOrderStore = signalStore(
           tap(() => patchState(store, {isLoading: true, error: null})),
           switchMap((orderData) => {
             if (hasOverlap(orderData)) {
-              return handleError('Overlap detected! Choose another time.');
+              return handleError('Schedule overlap detected! Choose another time.');
             }
 
             return service.createOrder(orderData).pipe(
@@ -101,7 +120,7 @@ export const WorkOrderStore = signalStore(
           switchMap((doc) => {
             // Check overlap (exclude current item by its ID)
             if (hasOverlap(doc.data, doc.docId)) {
-              return handleError('Schedule overlap detected.');
+              return handleError('Schedule overlap detected. Choose another time.');
             }
 
             return service.updateOrder(doc).pipe(
@@ -133,6 +152,7 @@ export const WorkOrderStore = signalStore(
                 items: items.filter(i => i.docId !== docId),
                 isLoading: false
               });
+              toast.show('Deleted successfully!', 'success');
             }),
             catchError(() => handleError('Delete failed'))
           ))

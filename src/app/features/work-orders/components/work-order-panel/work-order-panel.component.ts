@@ -12,9 +12,9 @@ import {WorkOrderData, WorkOrderPanelInput, WorkOrderSaveEvent} from '../../mode
 import {NgLabelTemplateDirective, NgOptionTemplateDirective, NgSelectComponent} from '@ng-select/ng-select';
 import {animate, group, query, style, transition, trigger} from '@angular/animations';
 import {NgbDateParserFormatter, NgbDatepickerKeyboardService, NgbInputDatepicker} from '@ng-bootstrap/ng-bootstrap';
-import {isoToNgbDate, ngbDateToIso} from '../../utils/date-utils';
-import {DmyDateParserFormatter} from '../../utils/date-formatter';
-import {CustomKeyboardService} from '../../utils/datepicker-keyboard';
+import {isoToNgbDate, ngbDateToIso} from '../../utils/date-utils/date-utils';
+import {DmyDateParserFormatter} from '../../utils/date-utils/date-formatter';
+import {CustomKeyboardService} from '../../utils/date-utils/datepicker-keyboard';
 import {EscCloseDirective} from '../../directives/esc-close.directive';
 import {AutoFocusDirective} from '../../directives/auto-focus.directive';
 

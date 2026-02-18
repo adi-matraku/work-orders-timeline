@@ -97,12 +97,14 @@
 
                 @if (hoverPreview()?.workCenterId === center.docId) {
                   <div
-                    class="add-work-order-preview"
+                    class="add-work-order-preview tooltip-box"
                     [style.left.px]="hoverPreview()!.left"
                     [style.width.px]="hoverPreview()!.width"
                     (click)="onPreviewClick($event, center.docId)"
                   >
-                    <span class="preview-label">Click to add dates</span>
+                    <div class="custom-tooltip">
+                      <span class="tooltip-text">Click to add dates</span>
+                    </div>
                   </div>
                 }
               </div>
@@ -139,7 +141,7 @@
 @if (orderToDelete()) {
   <app-confirm-dialog
     title="Delete Work Order"
-    [message]="'Are you sure you want to delete ' + orderToDelete()!.docId + '?'"
+    [message]="'Are you sure you want to delete ' + orderToDelete()!.data.name + '?'"
     (confirmed)="confirmDelete()"
-    (canceled)="orderToDelete.set(null); selectedAction.set(null);" />
+    (canceled)="orderToDelete.set(null); selectedAction.set(null);"/>
 }

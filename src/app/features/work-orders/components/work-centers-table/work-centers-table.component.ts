@@ -19,7 +19,7 @@ import {
   buildMonthColumns,
   buildWeekColumns,
   getDurationPerCell
-} from '../../utils/timeline-columns.utils';
+} from '../../utils/timeline-columns-calculations-utils/timeline-columns.utils';
 import {MOCK_WORK_CENTERS} from '../../../../mocks/work-orders.mock';
 import {
   WorkCenterDocument,
@@ -32,7 +32,7 @@ import {
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {FormsModule} from '@angular/forms';
 import {WorkOrderPanelComponent} from '../work-order-panel/work-order-panel.component';
-import {ConfirmDialogComponent} from '../../../../shared/confirm-dialog.component';
+import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog.component';
 import {timelineViewChange} from '../../animations/timeline-view-change.animation';
 
 @Component({
@@ -294,6 +294,9 @@ export class WorkCentersTableComponent {
   });
 
 
+  // NOTE: This runs on mousemove but logic is lightweight.
+  // If this were production-scale (hundreds of rows),
+  // we could throttle via requestAnimationFrame and also better to be used within a directive in the future.
   onGridRowHover(event: MouseEvent, workCenterId: string) {
     const scale = this.currentView();
     const config = TIMESCALE_CONFIG[scale];

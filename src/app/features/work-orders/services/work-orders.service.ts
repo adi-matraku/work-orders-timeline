@@ -1,12 +1,17 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {delay, Observable, of} from 'rxjs';
 import {WorkOrderData, WorkOrderDocument} from '../models/work-orders.model';
 import {MOCK_WORK_ORDERS} from '../../../mocks/work-orders.mock';
-import {generateId} from '../utils/numbers-generator.util';
+import {generateId} from '../utils/number-generators/numbers-generator.util';
+import {LocalStorageService} from '../../../shared/services/local-storage.service';
 
 @Injectable({providedIn: 'root'})
 export class WorkOrderService {
-  private mockDb: WorkOrderDocument[] = [...MOCK_WORK_ORDERS];
+  private storageKey = 'work_orders';
+  private storage = inject(LocalStorageService);
+
+  private mockDb: WorkOrderDocument[] =
+    this.storage.get<WorkOrderDocument[]>(this.storageKey) ?? [...MOCK_WORK_ORDERS];
 
   // Simulate a get call
   getOrders(): Observable<WorkOrderDocument[]> {
