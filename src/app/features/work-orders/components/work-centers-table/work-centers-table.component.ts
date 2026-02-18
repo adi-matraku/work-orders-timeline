@@ -1,9 +1,12 @@
 import {
-  AfterViewInit,
+  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef, inject, input, model, output, Signal,
+  ElementRef,
+  input,
+  model,
+  output,
   signal,
   viewChild
 } from '@angular/core';
@@ -20,13 +23,17 @@ import {
 import {MOCK_WORK_CENTERS} from '../../../../mocks/work-orders.mock';
 import {
   WorkCenterDocument,
-  WorkOrderActionType, WorkOrderData,
-  WorkOrderDocument, WorkOrderPanelInput, WorkOrderSaveEvent
+  WorkOrderActionType,
+  WorkOrderData,
+  WorkOrderDocument,
+  WorkOrderPanelInput,
+  WorkOrderSaveEvent
 } from '../../models/work-orders.model';
 import {NgSelectComponent} from '@ng-select/ng-select';
 import {FormsModule} from '@angular/forms';
 import {WorkOrderPanelComponent} from '../work-order-panel/work-order-panel.component';
 import {ConfirmDialogComponent} from '../../../../shared/confirm-dialog.component';
+import {timelineViewChange} from '../../animations/timeline-view-change.animation';
 
 @Component({
   selector: 'app-work-centers-table',
@@ -34,9 +41,10 @@ import {ConfirmDialogComponent} from '../../../../shared/confirm-dialog.componen
   imports: [CommonModule, TimescaleSelectorComponent, NgSelectComponent, FormsModule, WorkOrderPanelComponent, ConfirmDialogComponent],
   templateUrl: './work-centers-table.component.html',
   styleUrls: ['./work-centers-table.component.scss'],
+  animations: [timelineViewChange],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorkCentersTableComponent implements AfterViewInit {
+export class WorkCentersTableComponent {
   readonly scrollContainer = viewChild<ElementRef<HTMLDivElement>>('scrollContainer');
 
   readonly currentView = signal<Timescale>('month');
@@ -73,6 +81,9 @@ export class WorkCentersTableComponent implements AfterViewInit {
     width: number;
   } | null>(null);
 
+  panelOpen = signal(false);
+  panelData = signal<WorkOrderPanelInput | null>(null);
+
   /**
    * Generates timeline columns based on the current timescale.
    */
@@ -105,19 +116,25 @@ export class WorkCentersTableComponent implements AfterViewInit {
     const cellWidth = this.cellWidth();
     const msPerCell = getDurationPerCell(this.currentView());
 
+    // Define the visible time window of the timeline in milliseconds
     const timelineStartMs = columns[0].date.getTime();
     const timelineEndMs =
       columns[columns.length - 1].date.getTime() + msPerCell;
 
+    // Map each order to its pixel position and width based on its start and end dates
     return orders.map(order => {
       const orderStartMs = new Date(order.data.startDate).getTime();
       const orderEndMs = new Date(order.data.endDate).getTime();
 
-      // Clamp order to visible range
+      /**
+       * Clamp the order range to the visible timeline window.
+       * This ensures we only render the part of the order
+       * that actually intersects with the current view.
+       */
       const visibleStartMs = Math.max(orderStartMs, timelineStartMs);
       const visibleEndMs = Math.min(orderEndMs, timelineEndMs);
 
-      // If no intersection, don't render
+      // If the order does not intersect the visible range, hide it
       if (visibleEndMs <= visibleStartMs) {
         return {
           ...order,
@@ -127,7 +144,11 @@ export class WorkCentersTableComponent implements AfterViewInit {
         };
       }
 
-      // Convert visible range to pixels
+      /**
+       * Convert time offsets into pixel values:
+       * - left: distance from timeline start
+       * - width: duration within the visible range
+       */
       const left =
         ((visibleStartMs - timelineStartMs) / msPerCell) * cellWidth;
 
@@ -202,16 +223,15 @@ export class WorkCentersTableComponent implements AfterViewInit {
     return (elapsedMsSinceStart / visibleDurationMs) * totalTimelineWidthPx;
   });
 
-  ngAfterViewInit() {
-    this.centerOnToday();
+  constructor() {
+    afterNextRender(() => {
+      this.centerOnToday();
+    });
   }
 
   setView(mode: Timescale) {
     this.currentView.set(mode);
   }
-
-  panelOpen = signal(false);
-  panelData = signal<WorkOrderPanelInput | null>(null);
 
   onPanelClose(): void {
     this.closeAndResetModal();
@@ -219,7 +239,6 @@ export class WorkCentersTableComponent implements AfterViewInit {
   }
 
   onPanelSave(workOrder: WorkOrderSaveEvent): void {
-    console.log('Saved work order:', workOrder);
     this.panelOpen.set(false);
     this.panelData.set(null);
 
@@ -236,19 +255,16 @@ export class WorkCentersTableComponent implements AfterViewInit {
   ): void {
     switch (action) {
       case 'edit':
-        console.log(order);
-        console.log('Edit', order.data);
         this.openPanel({mode: 'edit', data: order});
         break;
 
       case 'delete':
-        console.log('Delete', order);
         this.orderToDelete.set(order);
         break;
     }
   }
 
-  private centerOnToday() {
+  centerOnToday() {
     const container = this.scrollContainer()?.nativeElement;
     if (!container) return;
 
@@ -260,6 +276,23 @@ export class WorkCentersTableComponent implements AfterViewInit {
       behavior: 'smooth'
     });
   }
+
+  ordersByWorkCenter = computed(() => {
+    const map = new Map<string, PositionedWorkOrder[]>();
+
+    for (const order of this.timelineOrders()) {
+      const centerId = order.data.workCenterId;
+
+      if (!map.has(centerId)) {
+        map.set(centerId, []);
+      }
+
+      map.get(centerId)!.push(order);
+    }
+
+    return map;
+  });
+
 
   onGridRowHover(event: MouseEvent, workCenterId: string) {
     const scale = this.currentView();
@@ -285,10 +318,8 @@ export class WorkCentersTableComponent implements AfterViewInit {
     const rightPos = leftPos + PREVIEW_WIDTH;
 
     // 4. Collision Detection
-    // Filter existing orders for this row only
-    const existingOrdersInRow = this.timelineOrders().filter(
-      (order) => order.data.workCenterId === workCenterId
-    );
+    // Get filtered existing orders for this row only
+    const existingOrdersInRow = this.ordersByWorkCenter().get(workCenterId) ?? [];
 
     // Check if our rectangle hits any existing order
     const isOverlapping = existingOrdersInRow.some((order) => {
@@ -327,8 +358,6 @@ export class WorkCentersTableComponent implements AfterViewInit {
       startDate: startDate.toISOString().split('T')[0],
       endDate: endDate.toISOString().split('T')[0],
     };
-
-    console.log('Successfully captured dates:', newWorkOrder);
 
     // 4. NEXT STEP: Open creation dialog
     this.openPanel({mode: 'create', data: newWorkOrder});

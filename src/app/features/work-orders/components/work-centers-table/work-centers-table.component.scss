@@ -2,6 +2,12 @@
   display: block;
 }
 
+.timescale-selector-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .work-centers-container {
   border: 1px solid rgba(230, 235, 240, 1);
   margin-top: 24px;
@@ -11,7 +17,7 @@
 .work-centers-layout {
   display: flex;
   overflow: hidden;
-  align-items: stretch;
+  min-width: 0;
 
   .left-panel {
     width: 382px;
@@ -70,10 +76,11 @@
 
   .right-panel {
     width: 957px;
-    overflow-x: auto;
     position: relative;
     background: white;
     scroll-behavior: smooth;
+    overflow-x: auto;
+    overflow-y: hidden;
 
     .timeline-content-wrapper {
       min-width: max-content;
@@ -344,3 +351,18 @@
     }
   }
 };
+@media (max-width: 1024px) {
+  .work-centers-layout {
+    overflow-x: auto;
+
+    .left-panel {
+      width: 280px;
+    }
+  }
+
+  .right-panel {
+    width: auto;
+    flex: 1 1 auto;
+    min-width: 600px;
+  }
+}

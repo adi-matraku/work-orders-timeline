@@ -73,7 +73,6 @@ export const WorkOrderStore = signalStore(
         pipe(
           tap(() => patchState(store, {isLoading: true, error: null})),
           switchMap((orderData) => {
-            console.log(orderData);
             if (hasOverlap(orderData)) {
               return handleError('Overlap detected! Choose another time.');
             }

@@ -1,12 +1,10 @@
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
-  effect, ElementRef,
-  HostListener,
+  effect,
   inject,
   input,
-  output, viewChild
+  output
 } from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -113,7 +111,6 @@ export class WorkOrderPanelComponent {
         startDate: isoToNgbDate(template.startDate),
         endDate: isoToNgbDate(template.endDate),
       }, {emitEvent: false});
-      console.log(this.workOrderForm);
     });
   }
 

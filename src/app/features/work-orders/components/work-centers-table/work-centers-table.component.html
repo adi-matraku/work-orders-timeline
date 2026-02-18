@@ -1,6 +1,16 @@
 <div class="work-centers">
   <div class="timescale-selector-container">
     <app-timescale-selector (viewChange)="setView($event)"/>
+
+    @if (currentView() === 'month') {
+      <button
+        class="btn-submit"
+        type="button"
+        (click)="centerOnToday()"
+      >
+        Today
+      </button>
+    }
   </div>
   <div class="work-centers-container">
     <div class="work-centers-layout">
@@ -22,7 +32,7 @@
 
       <!-- RIGHT PANEL: Timeline -->
       <div class="right-panel" #scrollContainer>
-        <div class="timeline-content-wrapper">
+        <div class="timeline-content-wrapper" [@timelineViewChange]="currentView()">
           <div class="timeline-header">
             @for (col of timelineColumns(); track col.label) {
               <div class="timeline-col-header" [style.width.px]="cellWidth()">

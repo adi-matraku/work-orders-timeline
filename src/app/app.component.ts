@@ -17,15 +17,28 @@ import {ToastComponent} from './shared/toast.component';
   `,
   styles: `
     .app-container {
-      width: 1440px;
+      max-width: 1440px;
+      width: 100%;
       padding-left: 101px;
     }
+
     .logo-container {
       width: 100%;
       height: 50px;
       background-color: rgba(255, 255, 255, 1);
       padding: 20px 0;
       margin-bottom: 45px;
+    }
+
+    @media (max-width: 768px) {
+      .app-container {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .logo-container {
+        margin-bottom: 24px;
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
