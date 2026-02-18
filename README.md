@@ -2,6 +2,8 @@
 
 A high-performance, reactive timeline application built with **Angular 19.1** and **NgRx Signal Store**. This application allows production managers to visualize, create, and manage work orders across multiple work centers with real-time overlap validation.
 
+You can test the app via netlify: [text](https://work-orders-timeline.netlify.app/work-orders)
+
 ## 🚀 Key Features
 
 * **Reactive State Management**: Powered by `@ngrx/signals` for lightweight, signal-based state.
@@ -182,32 +184,6 @@ Relying on non-standard key combinations (e.g. ArrowDown, Alt + Key) to open the
 
 The original design did not include a dedicated button or icon to open the datepicker dialog.
 This made it difficult to provide a fully accessible, keyboard-only interaction while preserving the pixel-perfect design.
-
-### ✅ Decision & Recommendation
-
-To ensure full accessibility compliance, we recommend (and would implement in a production setting):
-
-Adding a visible button or icon button next to the date input.
-
-Using this button as the official keyboard-accessible trigger for opening the datepicker dialog
-
-Associating it with:
-
-* Proper focus styles
-
-* aria-haspopup="dialog"
-
-* Clear screen-reader labeling
-
-This approach:
-
-* Ensures predictable keyboard behavior
-
-* Improves discoverability
-
-* Aligns with accessibility standards
-
-* Avoids fragile key-event hacks
 
 ## Final Notes
 
